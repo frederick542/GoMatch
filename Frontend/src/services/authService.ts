@@ -30,6 +30,7 @@ async function register(email: string, password: string, name: string, dob: Date
         profileImage: profileImage,
         extension: extension
     }
+    
     await createRequest(url, body)
 }
 

@@ -43,6 +43,7 @@ export default function Register({ navigation: { navigate } }: Props) {
 
     const { executeAsync: handleSendEmailOTP } = useAsyncHandler(
         async function () {
+
             await authService.sendEmailOTP(email)
             setStep(1)
         },
