@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useCustomTheme from "../../hooks/useCustomTheme";
 import CustomTheme from "../../models/CustomTheme";
 import UserService from "../../services/userService";
@@ -20,7 +20,7 @@ export default function Payment({ navigation }: Props) {
     const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
 
     const handleBackImgPress = () => {
-        navigation.navigate('Premium');
+        navigation.navigate('Package');
     };
 
     const RadioButton = ({ selected, onPress }: { selected: boolean, onPress: () => void }) => (
@@ -32,11 +32,10 @@ export default function Payment({ navigation }: Props) {
             Alert.alert("Error", "Please select a payment method before confirming.");
             return;
         }
-
+        
         await userService.updateUserData({
             premium: true
-        })
-
+        }, "")
         setUser(
             (user) => ({
                 ...user,
@@ -47,7 +46,7 @@ export default function Payment({ navigation }: Props) {
         Alert.alert("Success", "Upgrade confirmed", [
             {
                 text: "OK",
-                onPress: () => navigation.navigate('Profile')
+                onPress: () => navigation.navigate('Login')
             }
         ]);
     };

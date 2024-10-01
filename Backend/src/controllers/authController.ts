@@ -7,17 +7,18 @@ import { getImageDownloadUrl, uploadImage } from "../utils/imageUtils";
 import { decodeJWTToken, generateJWTToken } from "../utils/jwtUtils";
 import { filterUserData } from "../utils/userUtils";
 
+const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 async function sendEmailOTP(req: Request, res: Response) {
   const { email }: { email: string } = req.body;
   if (!email) {
     res.status(400).send("Email is required");
     return;
   }
-  if (!email.endsWith("@binus.ac.id")) {
-    res.status(400).send("Please use your binus.ac.id email");
+  if (!emailPattern.test(email)) {
+    res.status(400).send("Please provide valid email");
     return;
   }
-  
+
   try {
     const userSnapshot = await firebaseAdmin.db
       .collection("users")
@@ -29,7 +30,7 @@ async function sendEmailOTP(req: Request, res: Response) {
       return;
     }
   } catch (error: any) {
-    console.log("error message: ",error.message)
+    console.log("error message: ", error.message);
     res.status(500).send(error.message);
   }
 
@@ -41,14 +42,23 @@ async function sendEmailOTP(req: Request, res: Response) {
       .set({ code: code });
     const emailPromise = EmailController.sendEmail(
       email,
-      "BINDER Verification OTP Code",
-      code
+      "GoMatch: Verification OTP Code",
+      `<h2>Dear User,</h2>
+               <p>Thank you for using GoMatch. Your verification code is:</p>
+               <h1 style="font-size: 2em; color: #4CAF50;">${code}</h1>
+               <p>Please enter this code in the application to verify your account.</p>
+               <p>If you did not request this, please ignore this email.</p>
+               <br>
+               <p>Best regards,</p>
+               <p>The GoMatch Team</p>
+               <p><small>If you have any questions, feel free to contact us at gomatchservice@gmail.com</small></p>`
     );
 
     await Promise.all([otpPromise, emailPromise]);
 
     res.status(200).json({ data: "Email sent" });
   } catch (error: any) {
+    console.log(error)
     res.status(500).send(error.message);
   }
 }
@@ -61,8 +71,8 @@ async function verifyEmailOTP(req: Request, res: Response) {
     return;
   }
 
-  if (!email.endsWith("@binus.ac.id")) {
-    res.status(400).send("Please use your binus.ac.id email");
+  if (!emailPattern.test(email)) {
+    res.status(400).send("Please provide valid email");
     return;
   }
 
@@ -90,9 +100,8 @@ async function register(req: Request, res: Response) {
     email,
     password,
     dob,
-    binusian,
+    description,
     name,
-    campus,
     gender,
     profileImage,
     extension,
@@ -102,8 +111,7 @@ async function register(req: Request, res: Response) {
     !email ||
     !password ||
     !dob ||
-    !binusian ||
-    !campus ||
+    !description ||
     !gender ||
     !profileImage ||
     !extension
@@ -112,13 +120,13 @@ async function register(req: Request, res: Response) {
     return;
   }
 
-  if (!binusian.match("^[0-9]{2}$")) {
-    res.status(400).send("Binusian must be 2 digits");
+  if (!description) {
+    res.status(400).send("Description must be filled");
     return;
   }
 
-  if (!email.endsWith("@binus.ac.id")) {
-    res.status(400).send("Please use your binus.ac.id email");
+  if (!emailPattern.test(email)) {
+    res.status(400).send("Please use your valid email");
     return;
   }
 
@@ -144,15 +152,14 @@ async function register(req: Request, res: Response) {
       dob: dob,
       name: name,
       password: encryted_password,
-      binusian: binusian,
-      campus: campus,
+      description: description,
       gender: gender,
       profileImage: profileImageUrl,
       match: [],
       request: [],
       likedBy: [],
       swipe: {},
-      premium: false,
+      activeUntil: new Date().toISOString(),
       favorite: [],
       swipeCount: 0,
       swipeDate: new Date().toISOString(),

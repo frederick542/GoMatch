@@ -14,8 +14,8 @@ interface Props {
 const authService = AuthService();
 
 export default function Login({navigation: {navigate}}: Props) {
-  const {login} = useAuth();
   const {theme} = useCustomTheme();
+  const {login} = useAuth();
   const styles = getStyles(theme);
 
   const [email, setEmail] = useState('');

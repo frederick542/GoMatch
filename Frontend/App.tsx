@@ -10,7 +10,6 @@ import React from "react";
 
 function Routes() {
   const { user } = useAuth()
-
   if (user === undefined)
     return (
       <View style={
