@@ -10,7 +10,6 @@ export async function createRequest(
 
   const headers = {'Content-Type': 'application/json'};
   const to = `${baseUrl}${url}`;
-  console.log(to);
   const result = await fetch(to, {
     method: method ?? 'POST',
     headers: headers,

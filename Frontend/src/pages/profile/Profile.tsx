@@ -22,10 +22,7 @@ export default function Profile({ navigation }: Props) {
         navigation.navigate('EditProfile');
     };
 
-    const upgradeAccount = () => {
-        navigation.navigate('Premium');
-    };
-
+    console.log(user)
     return (
         <SafeAreaView style={styles.container}>
             <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
@@ -34,18 +31,12 @@ export default function Profile({ navigation }: Props) {
             <Text style={styles.title}>Profile</Text>
             <Image style={styles.profileImage} source={renderProfileImage(user?.profileImage)} />
             <TextHolder UserInfo={user?.name} TextLabel={"Name"}></TextHolder>
-            <TextHolder UserInfo={user?.binusian} TextLabel={"Binusian"}></TextHolder>
             <TextHolder UserInfo={user?.gender} TextLabel={"Gender"} />
-            <TextHolder UserInfo={user?.campus} TextLabel={"Campus Area"}></TextHolder>
+            <TextHolder UserInfo={user?.description} TextLabel={"Description"} />
             <TextHolder UserInfo={formatDate(user?.dob!)} TextLabel={"Date of Birth"} />
             <CustomButton style={[styles.button]} onPress={logout}>
                 <Text style={[styles.buttonText, { color: 'white' }]}>Logout</Text>
             </CustomButton>
-            {!user?.premium &&
-                <TouchableOpacity style={styles.upgradeButton} onPress={upgradeAccount}>
-                    <Text style={styles.upgradeText}>Upgrade to Premium</Text>
-                </TouchableOpacity>
-            }
         </SafeAreaView>
     );
 }

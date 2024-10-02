@@ -8,7 +8,9 @@ import Messages from '../pages/messages';
 import EditProfile from '../pages/editprofile';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Payment from '../pages/payment/Payment';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import useAuth from '../hooks/useAuth';
+import PaymentNavigator from './PaymentNavigator';
 
 const WrapperStack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -87,23 +89,38 @@ function TabNav() {
 }
 
 export default function TabNavigator() {
+  const {user} = useAuth();
+  const [showPaymentNavigator, setShowPaymentNavigator] = useState(false);
+
+  useEffect(() => {
+    if (user != null) {
+      if (new Date(user?.activeUntil) <= new Date()) {
+        setShowPaymentNavigator(true);
+      } else {
+        setShowPaymentNavigator(false);
+      }
+    }
+  }, []);
+
   return (
     <WrapperStack.Navigator initialRouteName="Tab">
-      <WrapperStack.Screen
-        name="Tab"
-        component={TabNav}
-        options={{headerShown: false}}
-      />
-      <WrapperStack.Screen
-        name="Payment"
-        component={Payment}
-        options={{headerShown: false}}
-      />
-      <WrapperStack.Screen
-        name="EditProfile"
-        component={EditProfile}
-        options={{headerShown: false}}
-      />
+      {showPaymentNavigator ? (
+        <WrapperStack.Screen
+          name="Payment"
+          component={() => (
+            <PaymentNavigator
+              setShowPaymentNavigator={setShowPaymentNavigator}
+            />
+          )}
+          options={{headerShown: false}}
+        />
+      ) : (
+        <WrapperStack.Screen
+          name="Tab"
+          component={TabNav}
+          options={{headerShown: false}}
+        />
+      )}
     </WrapperStack.Navigator>
   );
 }

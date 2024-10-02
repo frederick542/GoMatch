@@ -2,8 +2,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import Login from "../pages/login/Login";
 import Splash from "../pages/splash";
 import Register from "../pages/register";
-import Premium from "../pages/premium/Premium";
-import Payment from "../pages/payment/Payment";
 
 const NativeStack = createNativeStackNavigator()
 
@@ -23,16 +21,6 @@ export default function StackNavigator() {
         <NativeStack.Screen
           name="Register"
           component={Register}
-          options={{headerShown: false}}
-        />
-        <NativeStack.Screen
-          name="Package"
-          component={Premium}
-          options={{headerShown: false}}
-        />
-        <NativeStack.Screen
-          name="Payment"
-          component={Payment}
           options={{headerShown: false}}
         />
       </NativeStack.Navigator>

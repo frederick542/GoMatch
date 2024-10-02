@@ -58,7 +58,7 @@ async function sendEmailOTP(req: Request, res: Response) {
 
     res.status(200).json({ data: "Email sent" });
   } catch (error: any) {
-    console.log(error)
+    console.log(error);
     res.status(500).send(error.message);
   }
 }
@@ -146,8 +146,7 @@ async function register(req: Request, res: Response) {
     const timestamp = new Date().toISOString();
     const newPath = `profileImages/${email}_${timestamp}.${extension}`;
     const profileImageRef = await uploadImage(newPath, profileImage);
-    const profileImageUrl = (await getImageDownloadUrl(profileImageRef))[0];
-    
+    const profileImageUrl = await getImageDownloadUrl(profileImageRef);
     const userData = {
       dob: dob,
       name: name,
@@ -163,6 +162,7 @@ async function register(req: Request, res: Response) {
       favorite: [],
       swipeCount: 0,
       swipeDate: new Date().toISOString(),
+      firtPayment: true,
     };
 
     await firebaseAdmin.db.collection("users").doc(email).set(userData);
@@ -204,8 +204,6 @@ async function login(req: Request, res: Response) {
 
     const token = generateJWTToken(email);
     const temp = filterUserData(user);
-
-    console.log(temp.profileImage);
 
     res.status(200).json({ data: { user: temp, token: token } });
   } catch (error: any) {

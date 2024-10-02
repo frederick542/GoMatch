@@ -39,6 +39,7 @@ async function register(
     gender: gender,
     profileImage: profileImage,
     extension: extension,
+    firstPayment: true,
   };
 
   await createRequest(url, body);

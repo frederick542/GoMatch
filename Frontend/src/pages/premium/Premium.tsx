@@ -3,16 +3,18 @@ import {View, Text, StyleSheet} from 'react-native';
 import useCustomTheme from '../../hooks/useCustomTheme';
 import CustomTheme from '../../models/CustomTheme';
 import PriceBorder from './components/PriceBorder';
+import useAuth from '../../hooks/useAuth';
 
 interface Props {
   navigation: any;
   first?: boolean;
 }
 
-export default function Premium({navigation, first = true}: Props) {
+export default function Premium({ navigation, first = true }: Props) {
+  const {user} = useAuth();
   const {theme} = useCustomTheme();
   const styles = getStyles(theme);
-
+  console.log(user);
   return (
     <View style={styles.container}>
       <Text
@@ -65,9 +67,9 @@ export default function Premium({navigation, first = true}: Props) {
 
       <View style={styles.packageContainer}>
         {first === true && (
-          <PriceBorder type={'first'} navigation={navigation} />
+          <PriceBorder type={'weekly'} navigation={navigation} />
         )}
-        <PriceBorder type={'month'} navigation={navigation} />
+        <PriceBorder type={'monthly'} navigation={navigation} />
       </View>
     </View>
   );

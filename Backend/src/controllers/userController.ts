@@ -72,11 +72,16 @@ async function updateUserData(req: AuthRequest, res: Response) {
         { exp: number, iat: number } ? User :
         User & { exp: number, iat: number }
 
-    const { name, dob, binusian, campus, gender, profileImage, premium, password, extension } = req.body
+    const {
+      name,
+      dob,
+      activeUntil,
+      gender,
+      profileImage,
+      password,
+      extension,
+    } = req.body;
     const updatedData = {} as any
-
-    console.log(req.body);
-    
 
     if (name !== undefined) {
         if (name.length === 0) {
@@ -92,21 +97,11 @@ async function updateUserData(req: AuthRequest, res: Response) {
         }
         updatedData['dob'] = dob
     }
-    if (binusian !== undefined) {
-        if (binusian.length === 0 || !binusian.match('^[0-9]{2}$')) {
-            res.status(400).send('Binusian must be 2 digits')
-            return
-        }
-        updatedData['binusian'] = binusian
-    }
-    if (campus !== undefined) {
-        updatedData['campus'] = campus
-    }
     if (gender !== undefined) {
         updatedData['gender'] = gender
     }
-    if (premium !== undefined) {
-        updatedData['premium'] = premium
+    if (activeUntil !== undefined) {
+      updatedData["activeUntil"] = activeUntil;
     }
     if (password !== undefined) {
         if (password.length < 6) {
@@ -293,21 +288,6 @@ async function swipe(req: AuthRequest, res: Response) {
             }
         } as any
 
-
-        if (!userData.premium) {
-            if (Date.now() - new Date(userData.swipeDate).getTime() < 86400000) {
-                console.log('swipeCount', userData.swipeCount);
-
-                if (userData.swipeCount >= 10) {
-                    return res.status(200).send('limit')
-                }
-                updatedData.swipeCount = userData.swipeCount + 1
-            } else {
-                updatedData.swipeCount = 1
-                updatedData.swipeDate = new Date().toISOString()
-            }
-        }
-
         const toDoc = await firebaseAdmin.db.collection('users').doc(to).get()
         const toData = {
             ...toDoc.data(),
@@ -340,32 +320,10 @@ async function swipe(req: AuthRequest, res: Response) {
     }
     catch (error: any) {
         console.log(error);
-
         res.status(500).send(error.message)
     }
 }
 
-async function getPremium(req: AuthRequest, res: Response) {
-    const user = req.user as User;
-    const { email } = req.body
-    try {
-        const userDoc = await firebaseAdmin.db.collection('users').doc(email).get();
-
-        if (!userDoc.exists) {
-            res.status(404).send('User not found');
-            return;
-        }
-
-        const userData = userDoc.data() as User;
-
-        res.status(200).json({
-            premiumStatus: userData.premium
-        });
-    } catch (error: any) {
-        res.status(500).send(error.message);
-    }
-}
-
-const userController = { getPartnerList, getUserMatchOption, updateUserData, removePartner, swipe, getPremium }
+const userController = { getPartnerList, getUserMatchOption, updateUserData, removePartner, swipe }
 
 export default userController;

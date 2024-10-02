@@ -90,8 +90,6 @@ export default function VideoCall({route}: any) {
 
   function handleOnMessageWebSocket(event: WebSocketMessageEvent) {
     const parsed = JSON.parse(event.data);
-    console.log(parsed);
-
     if (parsed.newCallId) {
       setCallId(parsed.newCallId);
       setToEmail(parsed.to);

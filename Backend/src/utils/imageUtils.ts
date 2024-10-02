@@ -13,9 +13,8 @@ export async function uploadImage(path: string, image: string) {
 export async function getImageDownloadUrl(imageRef: any) {
   try {
     const url = `https://storage.googleapis.com/${imageRef.bucket.name}/${imageRef.name}`;
-     return url;
+    return url;
   } catch (error) {
-    console.log("error start here : ", error);
     throw new Error("Failed to get the image URL: " + error);
   }
 }

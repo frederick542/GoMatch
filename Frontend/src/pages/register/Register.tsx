@@ -85,8 +85,6 @@ export default function Register({navigation: {navigate}}: Props) {
     setCampus('');
     setIsOpenGenderPicker(false);
     setGender('Male');
-    const data = await authService.login(email, password);
-    login(data);
   }, 'Account registered successfully.');
 
   function openOtpInput() {

@@ -5,22 +5,22 @@ import useCustomTheme from '../../../hooks/useCustomTheme';
 export default function PriceBorder({type, navigation}: any) {
   const {theme} = useCustomTheme();
   const styles = getStyles(theme);
-  console.log(type);
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('Payment')}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Payment', {selectedPackage: type})}>
       <View style={styles.container}>
         <View
           style={[
             styles.border,
             {
-              backgroundColor: type === 'first' ? '#27B167' : '#E94057',
+              backgroundColor: type === 'weekly' ? '#27B167' : '#E94057',
             },
           ]}>
           <Text style={styles.topText}>
-            {type === 'first' ? 'Rp. 30.000' : 'RP. 100.000'}
+            {type === 'weekly' ? 'Rp. 30.000' : 'RP. 100.000'}
           </Text>
           <Text style={styles.bottomText}>
-            {type === 'first' ? 'First payment trial\nfor 3 days' : 'per month'}
+            {type === 'weekly' ? 'First payment trial\nfor 3 days' : 'per month'}
           </Text>
         </View>
       </View>

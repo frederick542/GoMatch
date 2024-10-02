@@ -30,7 +30,7 @@ export default function Login({navigation: {navigate}}: Props) {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <View style={styles.inputDiv}>
-        <Text style={styles.inputLabel}>Email (@binus.ac.id)</Text>
+        <Text style={styles.inputLabel}>Email</Text>
         <TextInput style={styles.input} value={email} onChangeText={setEmail} />
       </View>
       <View style={styles.inputDiv}>
