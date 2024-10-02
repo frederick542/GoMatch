@@ -13,10 +13,10 @@ async function sendEmailOTP(req: Request, res: Response) {
     res.status(400).send("Email is required");
     return;
   }
-  if (!email.endsWith("@binus.ac.id")) {
-    res.status(400).send("Please use your binus.ac.id email");
-    return;
-  }
+  // if (!email.endsWith("@binus.ac.id")) {
+  //   res.status(400).send("Please use your binus.ac.id email");
+  //   return;
+  // }
   
   try {
     const userSnapshot = await firebaseAdmin.db
@@ -28,6 +28,8 @@ async function sendEmailOTP(req: Request, res: Response) {
       res.status(400).send("Email already registered");
       return;
     }
+
+
   } catch (error: any) {
     console.log("error message: ",error.message)
     res.status(500).send(error.message);
@@ -35,20 +37,23 @@ async function sendEmailOTP(req: Request, res: Response) {
 
   try {
     const code = Math.floor(1000 + Math.random() * 9000).toString();
+
     const otpPromise = firebaseAdmin.db
       .collection("otp")
       .doc(email)
       .set({ code: code });
+
     const emailPromise = EmailController.sendEmail(
       email,
       "BINDER Verification OTP Code",
       code
     );
-
+    
     await Promise.all([otpPromise, emailPromise]);
-
+    
     res.status(200).json({ data: "Email sent" });
   } catch (error: any) {
+    console.log('hi gantneg', error)
     res.status(500).send(error.message);
   }
 }
@@ -61,10 +66,10 @@ async function verifyEmailOTP(req: Request, res: Response) {
     return;
   }
 
-  if (!email.endsWith("@binus.ac.id")) {
-    res.status(400).send("Please use your binus.ac.id email");
-    return;
-  }
+  // if (!email.endsWith("@binus.ac.id")) {
+  //   res.status(400).send("Please use your binus.ac.id email");
+  //   return;
+  // }
 
   const otpRecord = await firebaseAdmin.db.collection("otp").doc(email).get();
 
@@ -98,29 +103,29 @@ async function register(req: Request, res: Response) {
     extension,
   } = req.body;
 
-  if (
-    !email ||
-    !password ||
-    !dob ||
-    !binusian ||
-    !campus ||
-    !gender ||
-    !profileImage ||
-    !extension
-  ) {
-    res.status(400).send("All fields must not be empty");
-    return;
-  }
+  // if (
+  //   !email ||
+  //   !password ||
+  //   !dob ||
+  //   !binusian ||
+  //   !campus ||
+  //   !gender ||
+  //   !profileImage ||
+  //   !extension
+  // ) {
+  //   res.status(400).send("All fields must not be empty");
+  //   return;
+  // }
 
   if (!binusian.match("^[0-9]{2}$")) {
     res.status(400).send("Binusian must be 2 digits");
     return;
   }
 
-  if (!email.endsWith("@binus.ac.id")) {
-    res.status(400).send("Please use your binus.ac.id email");
-    return;
-  }
+  // if (!email.endsWith("@binus.ac.id")) {
+  //   res.status(400).send("Please use your binus.ac.id email");
+  //   return;
+  // }
 
   if (password.length < 6) {
     res.status(400).send("Password must be at least 6 characters");
