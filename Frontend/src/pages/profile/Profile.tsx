@@ -22,7 +22,6 @@ export default function Profile({ navigation }: Props) {
         navigation.navigate('EditProfile');
     };
 
-    console.log(user)
     return (
         <SafeAreaView style={styles.container}>
             <TouchableOpacity style={styles.editButton} onPress={handleEdit}>

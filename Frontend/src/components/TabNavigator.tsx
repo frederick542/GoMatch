@@ -115,11 +115,18 @@ export default function TabNavigator() {
           options={{headerShown: false}}
         />
       ) : (
-        <WrapperStack.Screen
-          name="Tab"
-          component={TabNav}
-          options={{headerShown: false}}
-        />
+        <>
+          <WrapperStack.Screen
+            name="Tab"
+            component={TabNav}
+            options={{headerShown: false}}
+          />
+          <WrapperStack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{headerShown: false}}
+          />
+        </>
       )}
     </WrapperStack.Navigator>
   );

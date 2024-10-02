@@ -38,8 +38,6 @@ export default function Home({ navigation }: Props) {
 
     const [filter, setFilter] = useState({
         gender: user?.gender === 'Male' ? 'Female' : 'Male',
-        campus: user?.campus ? user.campus : 'Kemanggisan',
-        binusian: user?.binusian ? user.binusian : '26',
         minAge: 17,
         maxAge: 50,
         offset: 0
