@@ -1,6 +1,5 @@
 import { BlurView } from "@react-native-community/blur";
 import { Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import MessageService from "../../../services/messageService";
 import { useEffect } from "react";
 
 export default function profileCards({ closeController,message,item, navigation, show, userService, useEmail, refresh , refrence, dataController}: any) {
@@ -14,13 +13,12 @@ export default function profileCards({ closeController,message,item, navigation,
     return (
         <TouchableOpacity style={styles.container} activeOpacity={1} onPress={() => {
             dataController({
-                name: item.name,
-                picture: item.profilePict,
-                email : item.email,
-                age: item.age,
-                campus: item.kampus,
-                binusian: item.binusian
-            })
+              name: item.name,
+              picture: item.profilePict,
+              email: item.email,
+              age: item.age,
+              description: item.description,
+            });
             refrence.current.open()
         }}>
             <ImageBackground

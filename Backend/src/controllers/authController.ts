@@ -163,6 +163,7 @@ async function register(req: Request, res: Response) {
       swipeCount: 0,
       swipeDate: new Date().toISOString(),
       firtPayment: true,
+      personality: ""
     };
 
     await firebaseAdmin.db.collection("users").doc(email).set(userData);

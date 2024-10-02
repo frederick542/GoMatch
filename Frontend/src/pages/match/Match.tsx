@@ -44,8 +44,7 @@ export default function Match({navigation}: any) {
     email: '',
     picture: '',
     age: 0,
-    campus: '',
-    binusian: '',
+    description: '',
   });
   const [data, setData] = useState<MatchData[]>([]);
   const [selectedProfile, setSelectedProfile] = useState(false);
@@ -240,7 +239,7 @@ export default function Match({navigation}: any) {
             style={[
               styles.detailTitle,
               {fontSize: 17},
-            ]}>{`${currentData.campus}, Binnusian ${currentData.binusian}`}</Text>
+            ]}>{`${currentData.description}`}</Text>
           <TouchableOpacity
             style={styles.button}
             activeOpacity={1}

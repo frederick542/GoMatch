@@ -32,14 +32,12 @@ export default function Profile({ navigation }: Props) {
     const [datePickerVisible, setDatePickerVisible] = useState(false);
 
     const [name, setName] = useState(user?.name || '');
+    const [description, setDescription] = useState(user?.description || '');
     const [dob, setDob] = useState(user?.dob ? user.dob : new Date());
-    const [binusian, setBinusian] = useState(user?.binusian || '');
     const [profileUri, setProfileUri] = useState('');
     const [profileImage, setProfileImage] = useState('');
     const [extension, setExtension] = useState('');
 
-    const [isOpenCampusPicker, setIsOpenCampusPicker] = useState(false)
-    const [campus, setCampus] = useState(user?.campus ?? 'Kemanggisan')
     const [isOpenGenderPicker, setIsOpenGenderPicker] = useState(false)
     const [gender, setGender] = useState(user?.gender ?? 'Male')
 
@@ -49,10 +47,9 @@ export default function Profile({ navigation }: Props) {
 
             if (name !== user?.name) updatedData.name = name
             if (!isSameDate(dob, user?.dob!)) updatedData.dob = dob
-            if (binusian !== user?.binusian) updatedData.binusian = binusian
-            if (campus !== user?.campus) updatedData.campus = campus
             if (profileImage !== '') updatedData.profileImage = profileImage
             if (gender !== user?.gender) updatedData.gender = gender
+            if (description !== user?.description) updatedData.description = description;
 
             if (Object.keys(updatedData).length === 0) {
                 toastService.info('No changes detected')
@@ -88,55 +85,59 @@ export default function Profile({ navigation }: Props) {
     }
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.backContainer} onPress={handleBackImgPress}>
-                <Image source={require("../../assets/back.png")} style={styles.backImg} />
-            </TouchableOpacity>
-            <Text style={styles.title}>Edit Profile</Text>
-            <TouchableOpacity onPress={handlePickImage}>
-                <Image style={styles.profileImage} source={renderProfileImage(profileUri !== '' ? profileUri : user?.profileImage)} />
-            </TouchableOpacity>
-            <EditBox label="Name" state={name} setState={setName} />
-            <EditBox label="Binusian" state={binusian} setState={setBinusian} />
-            <EditBox label="Gender" />
-            <DropDownPicker style={styles.dropDownPicker}
-                textStyle={styles.dropDownPickerText}
-                containerStyle={{ width: '80%' }}
-                value={gender}
-                setValue={setGender}
-                items={genderOptions}
-                open={isOpenGenderPicker}
-                setOpen={setIsOpenGenderPicker} />
-            <EditBox label="Campus Area" />
-            <DropDownPicker style={styles.dropDownPicker}
-                textStyle={styles.dropDownPickerText}
-                containerStyle={{ width: '80%' }}
-                value={campus}
-                setValue={setCampus}
-                items={campusOptions}
-                open={isOpenCampusPicker}
-                setOpen={setIsOpenCampusPicker} />
-            {!datePickerVisible &&
-                <TouchableOpacity style={styles.chooseDOBButtonContainer} onPress={toggleDatePicker}>
-                    <Text style={styles.DOBButtonContent}>
-                        Choose birthday date
-                    </Text>
-                </TouchableOpacity>
-            }
-            {datePickerVisible && <DatePicker
-                style={styles.datePicker}
-                mode="date"
-                date={dob}
-                onDateChange={setDob}
-                title={'Date of Birth'}
-                minimumDate={new Date(1900, 0, 1)}
-                theme={userTheme === 'dark' ? 'dark' : 'light'}
-            />
-            }
-            <CustomButton style={styles.button} onPress={updateData}>
-                <Text style={[styles.buttonText, { color: 'white' }]}>Done</Text>
-            </CustomButton>
-        </View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.backContainer}
+          onPress={handleBackImgPress}>
+          <Image
+            source={require('../../assets/back.png')}
+            style={styles.backImg}
+          />
+        </TouchableOpacity>
+        <Text style={styles.title}>Edit Profile</Text>
+        <TouchableOpacity onPress={handlePickImage}>
+          <Image
+            style={styles.profileImage}
+            source={renderProfileImage(
+              profileUri !== '' ? profileUri : user?.profileImage,
+            )}
+          />
+        </TouchableOpacity>
+        <EditBox label="Name" state={name} setState={setName} />
+        <EditBox label="Description" state={description} setState={setDescription} />
+        <EditBox label="Gender" />
+        <DropDownPicker
+          style={styles.dropDownPicker}
+          textStyle={styles.dropDownPickerText}
+          containerStyle={{width: '80%'}}
+          value={gender}
+          setValue={setGender}
+          items={genderOptions}
+          open={isOpenGenderPicker}
+          setOpen={setIsOpenGenderPicker}
+        />
+        {!datePickerVisible && (
+          <TouchableOpacity
+            style={styles.chooseDOBButtonContainer}
+            onPress={toggleDatePicker}>
+            <Text style={styles.DOBButtonContent}>Choose birthday date</Text>
+          </TouchableOpacity>
+        )}
+        {datePickerVisible && (
+          <DatePicker
+            style={styles.datePicker}
+            mode="date"
+            date={dob}
+            onDateChange={setDob}
+            title={'Date of Birth'}
+            minimumDate={new Date(1900, 0, 1)}
+            theme={userTheme === 'dark' ? 'dark' : 'light'}
+          />
+        )}
+        <CustomButton style={styles.button} onPress={updateData}>
+          <Text style={[styles.buttonText, {color: 'white'}]}>Done</Text>
+        </CustomButton>
+      </View>
     );
 }
 

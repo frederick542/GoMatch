@@ -26,9 +26,15 @@ export default function Payment({navigation, route}: Props) {
   const styles = getStyles(theme);
   const {setShowPaymentNavigator} = route.params;
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const {user} = useAuth();
+  const first = user?.firtPayment;
 
   const handleBackImgPress = () => {
-    navigation.navigate('Package');
+    if (first == true) {
+      navigation.navigate('Personality Test'); // PERSONALITY TEST NAVIGATE
+    } else {
+      navigation.navigate('Package');
+    }
   };
 
   const RadioButton = ({
@@ -55,6 +61,7 @@ export default function Payment({navigation, route}: Props) {
     await userService.updateUserData(
       {
         activeUntil: newDateString,
+        firtPayment: false,
       },
       '',
     );
@@ -64,6 +71,7 @@ export default function Payment({navigation, route}: Props) {
         ({
           ...user,
           activeUntil: newDateString,
+          firtPayment: false,
         } as User),
     );
 

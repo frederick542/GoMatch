@@ -52,8 +52,7 @@ async function getPartnerList(req: AuthRequest, res: Response) {
         return {
           email: email,
           name: data.name,
-          kampus: data.campus,
-          binusian: data.binusian,
+          description: data.description,
           profilePict: data.profileImage,
           age: calculateAge(data.dob),
         };
@@ -76,8 +75,17 @@ async function updateUserData(req: AuthRequest, res: Response) {
     ? User
     : User & { exp: number; iat: number };
 
-  const { name, dob, activeUntil, gender, profileImage, password, extension } =
-    req.body;
+  const {
+    name,
+    dob,
+    activeUntil,
+    gender,
+    profileImage,
+    password,
+    extension,
+    description,
+    firtPayment,
+  } = req.body;
   const updatedData = {} as any;
 
   if (name !== undefined) {
@@ -97,8 +105,11 @@ async function updateUserData(req: AuthRequest, res: Response) {
   if (gender !== undefined) {
     updatedData["gender"] = gender;
   }
-  if (activeUntil !== undefined) {
-    updatedData["activeUntil"] = activeUntil;
+  if (description !== undefined) {
+    updatedData["description"] = description;
+  }
+  if (firtPayment !== undefined) {
+    updatedData["firtPayment"] = firtPayment;
   }
   if (password !== undefined) {
     if (password.length < 6) {

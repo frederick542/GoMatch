@@ -20,6 +20,12 @@ export default function PaymentNavigator({setShowPaymentNavigator}: Props) {
         options={{headerShown: false}}
         initialParams={{setShowPaymentNavigator}}
       />
+      <NativeStack.Screen
+        name="Personality Test" // PERSONALITY TEST NAVIGATE
+        component={Payment}
+        options={{headerShown: false}}
+        initialParams={{setShowPaymentNavigator}}
+      />
     </NativeStack.Navigator>
   );
 }

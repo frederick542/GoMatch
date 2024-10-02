@@ -7,14 +7,13 @@ import useAuth from '../../hooks/useAuth';
 
 interface Props {
   navigation: any;
-  first?: boolean;
 }
 
-export default function Premium({ navigation, first = true }: Props) {
+export default function Premium({ navigation}: Props) {
   const {user} = useAuth();
+  const first = user?.firtPayment
   const {theme} = useCustomTheme();
   const styles = getStyles(theme);
-  console.log(user);
   return (
     <View style={styles.container}>
       <Text
