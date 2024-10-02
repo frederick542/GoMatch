@@ -1,14 +1,21 @@
-import firebaseAdmin from "../firebase/firebase"
+import firebaseAdmin from "../firebase/firebase";
 
 export async function uploadImage(path: string, image: string) {
-    const imageRef = firebaseAdmin.storage.bucket().file(path)
-    await imageRef.save(Buffer.from(image, 'base64'))
-    return imageRef
+  const imageRef = firebaseAdmin.storage.bucket().file(path);
+  await imageRef.save(Buffer.from(image, "base64"), {
+    metadata: {
+      acl: [{ entity: "allUsers", role: "READER" }],
+    },
+  });
+  return imageRef;
 }
 
 export async function getImageDownloadUrl(imageRef: any) {
-    return await imageRef.getSignedUrl({
-        action: 'read',
-        expires: '03-09-2491'
-    })
+  try {
+    const url = `https://storage.googleapis.com/${imageRef.bucket.name}/${imageRef.name}`;
+     return url;
+  } catch (error) {
+    console.log("error start here : ", error);
+    throw new Error("Failed to get the image URL: " + error);
+  }
 }

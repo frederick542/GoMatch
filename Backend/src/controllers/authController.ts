@@ -147,7 +147,7 @@ async function register(req: Request, res: Response) {
     const newPath = `profileImages/${email}_${timestamp}.${extension}`;
     const profileImageRef = await uploadImage(newPath, profileImage);
     const profileImageUrl = (await getImageDownloadUrl(profileImageRef))[0];
-
+    
     const userData = {
       dob: dob,
       name: name,

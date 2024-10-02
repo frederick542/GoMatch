@@ -60,7 +60,6 @@ export default function Profile({ navigation }: Props) {
             }
 
             const data = await userService.updateUserData(updatedData, extension)
-
             login(data)
 
             toastService.success('Profile updated')
