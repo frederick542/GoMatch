@@ -14,8 +14,8 @@ interface Props {
 const authService = AuthService();
 
 export default function Login({navigation: {navigate}}: Props) {
-  const {login} = useAuth();
   const {theme} = useCustomTheme();
+  const {login} = useAuth();
   const styles = getStyles(theme);
 
   const [email, setEmail] = useState('');
@@ -30,7 +30,7 @@ export default function Login({navigation: {navigate}}: Props) {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <View style={styles.inputDiv}>
-        <Text style={styles.inputLabel}>Email (@binus.ac.id)</Text>
+        <Text style={styles.inputLabel}>Email</Text>
         <TextInput style={styles.input} value={email} onChangeText={setEmail} />
       </View>
       <View style={styles.inputDiv}>

@@ -1,68 +1,82 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import CustomTheme from "../../../models/CustomTheme";
-import useCustomTheme from "../../../hooks/useCustomTheme";
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import CustomTheme from '../../../models/CustomTheme';
+import useCustomTheme from '../../../hooks/useCustomTheme';
 
-export default function PriceBorder({Int, Price, navigation}: any){
-    const { theme } = useCustomTheme();
-    const styles = getStyles(theme);
-
-    return(
-        <View style={styles.container}>
-            <View style={styles.border}>
-                <Text style={styles.topText}>{Int} Months Premium</Text>
-                <Text style={styles.text}><Text style={styles.bullet}>●</Text> Boost your profile</Text>
-                <Text style={styles.text}><Text style={styles.bullet}>●</Text> Rewind feature</Text>
-                <Text style={styles.text}><Text style={styles.bullet}>●</Text> Add to favorites feature</Text>
-                <Text style={styles.text}><Text style={styles.bullet}>●</Text> Cancel anytime</Text>
-                <TouchableOpacity style={styles.borderMoney} onPress={() => navigation.navigate('Payment')}>
-                    <Text style={styles.money}>IDR{Price}.000</Text>
-                </TouchableOpacity>
-            </View>
+export default function PriceBorder({type, navigation}: any) {
+  const {theme} = useCustomTheme();
+  const styles = getStyles(theme);
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Payment', {selectedPackage: type})}>
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.border,
+            {
+              backgroundColor: type === 'weekly' ? '#27B167' : '#E94057',
+            },
+          ]}>
+          <Text style={styles.topText}>
+            {type === 'weekly' ? 'Rp. 30.000' : 'RP. 100.000'}
+          </Text>
+          <Text style={styles.bottomText}>
+            {type === 'weekly' ? 'First payment trial\nfor 3 days' : 'per month'}
+          </Text>
         </View>
-    )
+      </View>
+    </TouchableOpacity>
+  );
 }
 
-const getStyles = (theme: CustomTheme) => StyleSheet.create({
-    container:{
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: 20
+const getStyles = (theme: CustomTheme) =>
+  StyleSheet.create({
+    container: {
+      marginTop: 10,
+      display: 'flex',
+      alignItems: 'center',
     },
-    bullet:{
-        fontWeight: 'normal',
+    bullet: {
+      fontWeight: 'normal',
     },
-    border:{
-        display: 'flex',
-        backgroundColor: '#E6E6EA',
-        borderRadius: 15,    
-        width: '85%',
+    border: {
+      display: 'flex',
+      borderRadius: 15,
+      position: 'relative',
+      width: 180,
+      height: 180,
+      alignItems: 'center',
     },
-    topText:{
-        paddingTop: 30,
-        paddingLeft: 40,
-        fontSize: 28,
-        fontStyle: 'italic',
-        color: 'gray'
+    topText: {
+      fontSize: 28,
+      fontStyle: 'italic',
+      color: 'white',
+      marginTop: 50,
     },
-    text:{
-        fontSize: 20,
-        paddingLeft: 40,
-        fontStyle: 'italic',
-        color: 'gray'
+    bottomText: {
+      fontSize: 15,
+      fontStyle: 'italic',
+      color: 'white',
+      textAlign: 'center',
     },
-    borderMoney:{
-        display: 'flex',
-        alignSelf: 'flex-end',
-        width: '30%',
-        alignItems: 'center',
-        backgroundColor: '#E94057',
-        borderRadius: 10,
-        margin: 20,
-        paddingTop: 10,
-        paddingBottom: 10
+    text: {
+      fontSize: 20,
+      paddingLeft: 40,
+      fontStyle: 'italic',
+      color: 'gray',
     },
-    money:{
-        color: 'white',
-        fontStyle: 'italic',
-    }
-})
+    borderMoney: {
+      display: 'flex',
+      alignSelf: 'flex-end',
+      width: '30%',
+      alignItems: 'center',
+      backgroundColor: '#E94057',
+      borderRadius: 10,
+      margin: 20,
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
+    money: {
+      color: 'white',
+      fontStyle: 'italic',
+    },
+  });

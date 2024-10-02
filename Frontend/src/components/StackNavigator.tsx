@@ -7,10 +7,22 @@ const NativeStack = createNativeStackNavigator()
 
 export default function StackNavigator() {
     return (
-        <NativeStack.Navigator initialRouteName="Splash">
-            <NativeStack.Screen name="Splash" component={Splash} options={{ headerShown: false }} />
-            <NativeStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-            <NativeStack.Screen name="Register" component={Register} options={{ headerShown: false }} />
-        </NativeStack.Navigator>
-    )
+      <NativeStack.Navigator initialRouteName="Splash">
+        <NativeStack.Screen
+          name="Splash"
+          component={Splash}
+          options={{headerShown: false}}
+        />
+        <NativeStack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <NativeStack.Screen
+          name="Register"
+          component={Register}
+          options={{headerShown: false}}
+        />
+      </NativeStack.Navigator>
+    );
 }

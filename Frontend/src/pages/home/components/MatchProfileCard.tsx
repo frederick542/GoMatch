@@ -25,7 +25,7 @@ export default function MatchProfileCard({ match }: Props) {
             <Image style={styles.profileImage} source={renderProfileImage(match.profileImage)} />
             <View style={styles.textContainer}>
                 <Text style={styles.topText}> {match.name}, {getTimeDiffYear(match.dob)} </Text>
-                <Text style={styles.botText}> {match.campus}, Binusian {match.binusian} </Text>
+                <Text style={styles.botText}> {match.description} </Text>
             </View>
         </View>
     )

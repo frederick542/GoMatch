@@ -19,7 +19,7 @@ async function sendEmail(to: string, subject: string, html: string) {
         subject: subject,
         html: html
     }
-
+    
     await transporter.sendMail(emailSettings)
 }
 
