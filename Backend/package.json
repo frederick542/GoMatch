@@ -23,6 +23,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "@firebase/storage": "^0.13.2",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
