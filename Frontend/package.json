@@ -28,6 +28,7 @@
     "expo-font": "^11.10.3",
     "expo-modules-core": "^1.11.13",
     "invariant": "^2.2.4",
+    "lottie-react-native": "^7.0.0",
     "react": "18.2.0",
     "react-content-loader": "^7.0.0",
     "react-delegate-component": "^1.0.0",
@@ -40,6 +41,7 @@
     "react-native-image-picker": "^7.1.2",
     "react-native-image-resizer": "^1.4.5",
     "react-native-keep-awake": "^4.0.0",
+    "react-native-paper": "^5.12.5",
     "react-native-permissions": "^4.1.5",
     "react-native-raw-bottom-sheet": "^3.0.0",
     "react-native-reanimated": "^3.12.0",
@@ -48,6 +50,7 @@
     "react-native-sound": "^0.11.2",
     "react-native-svg": "^15.3.0",
     "react-native-toast-message": "^2.2.0",
+    "react-native-vector-icons": "^10.2.0",
     "zego-express-engine-reactnative": "^3.14.5"
   },
   "devDependencies": {
