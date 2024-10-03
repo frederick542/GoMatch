@@ -1,6 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Premium from '../pages/premium/Premium';
 import Payment from '../pages/payment/Payment';
+import PersonalityTest from '../pages/personalityTest/personalityTest';
 
 const NativeStack = createNativeStackNavigator();
 interface Props {
@@ -21,8 +22,8 @@ export default function PaymentNavigator({setShowPaymentNavigator}: Props) {
         initialParams={{setShowPaymentNavigator}}
       />
       <NativeStack.Screen
-        name="Personality Test" // PERSONALITY TEST NAVIGATE
-        component={Payment}
+        name="PersonalityTest" // PERSONALITY TEST NAVIGATE
+        component={PersonalityTest}
         options={{headerShown: false}}
         initialParams={{setShowPaymentNavigator}}
       />

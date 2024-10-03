@@ -11,6 +11,7 @@ import {
 import CustomTheme from '../../models/CustomTheme';
 import useCustomTheme from '../../hooks/useCustomTheme';
 import LottieView from 'lottie-react-native';
+import UserService from '../../services/userService';
 
 interface Option {
   text: string;
@@ -39,6 +40,8 @@ const personalityIcons = {
   funSeeker: require('../../assets/party-popper.png'),
   realist: require('../../assets/balance-sheet.png'),
 };
+
+const userService = UserService();
 
 const personalityTypes: Record<
   keyof PersonalityScores,
@@ -176,7 +179,9 @@ const questions: Question[] = [
   },
 ];
 
-export default function PersonalityTest() {
+export default function PersonalityTest({route}: {route: any}) {
+  const {setShowPaymentNavigator} = route.params;
+
   const {theme} = useCustomTheme();
   const styles = getStyles(theme);
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
@@ -274,18 +279,29 @@ export default function PersonalityTest() {
               </View>
               <TouchableOpacity
                 style={styles.continueButton}
-                onPress={() => {
-                  setCurrentQuestion(0);
-                  setScores({
-                    romantic: 0,
-                    adventurer: 0,
-                    intellectual: 0,
-                    caregiver: 0,
-                    funSeeker: 0,
-                    realist: 0,
-                  });
-                  setQuizFinished(false);
-                  setSelectedTieOption(null);
+                onPress={async () => {
+                  try {
+                    await userService.updateUserData(
+                      {
+                        personality: personalityTypes[selectedTieOption].name,
+                      },
+                      '',
+                    );
+                    setCurrentQuestion(0);
+                    setScores({
+                      romantic: 0,
+                      adventurer: 0,
+                      intellectual: 0,
+                      caregiver: 0,
+                      funSeeker: 0,
+                      realist: 0,
+                    });
+                    setQuizFinished(false);
+                    setSelectedTieOption(null);
+                    setShowPaymentNavigator(false);
+                  } catch (error) {
+                    console.error('Error updating user data:', error);
+                  }
                 }}>
                 <Text style={styles.buttonText}>Continue</Text>
               </TouchableOpacity>

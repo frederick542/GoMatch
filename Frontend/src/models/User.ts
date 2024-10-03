@@ -8,4 +8,5 @@ export default interface User {
   activeUntil: string;
   theme: string;
   firtPayment: boolean;
+  personality:string;
 }
