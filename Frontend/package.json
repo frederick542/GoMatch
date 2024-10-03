@@ -12,6 +12,8 @@
   "dependencies": {
     "@devvie/bottom-sheet": "^0.3.0",
     "@expo-google-fonts/abeezee": "^0.2.3",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@gorhom/bottom-sheet": "^4.6.3",
     "@gorhom/portal": "^1.0.14",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
@@ -27,6 +29,7 @@
     "@zegocloud/zego-uikit-rn": "^2.9.2",
     "expo-font": "^11.10.3",
     "expo-modules-core": "^1.11.13",
+    "font-awesome-icons": "^1.6.0",
     "invariant": "^2.2.4",
     "react": "18.2.0",
     "react-content-loader": "^7.0.0",
@@ -48,6 +51,7 @@
     "react-native-sound": "^0.11.2",
     "react-native-svg": "^15.3.0",
     "react-native-toast-message": "^2.2.0",
+    "react-native-vector-icons": "^10.2.0",
     "zego-express-engine-reactnative": "^3.14.5"
   },
   "devDependencies": {
