@@ -85,6 +85,7 @@ async function updateUserData(req: AuthRequest, res: Response) {
     extension,
     description,
     firtPayment,
+    personality
   } = req.body;
   const updatedData = {} as any;
 
@@ -110,6 +111,9 @@ async function updateUserData(req: AuthRequest, res: Response) {
   }
   if (firtPayment !== undefined) {
     updatedData["firtPayment"] = firtPayment;
+  }
+  if (personality !== undefined) {
+    updatedData["personality"] = personality;
   }
   if (password !== undefined) {
     if (password.length < 6) {

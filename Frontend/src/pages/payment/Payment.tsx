@@ -30,11 +30,7 @@ export default function Payment({navigation, route}: Props) {
   const first = user?.firtPayment;
 
   const handleBackImgPress = () => {
-    if (first == true) {
-      navigation.navigate('Personality Test'); // PERSONALITY TEST NAVIGATE
-    } else {
-      navigation.navigate('Package');
-    }
+    navigation.navigate('Package');
   };
 
   const RadioButton = ({
@@ -78,7 +74,13 @@ export default function Payment({navigation, route}: Props) {
     Alert.alert('Success', 'Upgrade confirmed', [
       {
         text: 'OK',
-        onPress: () => setShowPaymentNavigator(false),
+        onPress: () => {
+          if (first == true) {
+            navigation.navigate('PersonalityTest');
+          } else {
+            setShowPaymentNavigator(false);
+          }
+        },
       },
     ]);
   };
