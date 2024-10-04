@@ -14,6 +14,7 @@ async function sendEmailOTP(req: Request, res: Response) {
     res.status(400).send("Email is required");
     return;
   }
+
   if (!emailPattern.test(email)) {
     res.status(400).send("Please provide valid email");
     return;
@@ -29,6 +30,8 @@ async function sendEmailOTP(req: Request, res: Response) {
       res.status(400).send("Email already registered");
       return;
     }
+
+
   } catch (error: any) {
     console.log("error message: ", error.message);
     res.status(500).send(error.message);
@@ -36,10 +39,12 @@ async function sendEmailOTP(req: Request, res: Response) {
 
   try {
     const code = Math.floor(1000 + Math.random() * 9000).toString();
+
     const otpPromise = firebaseAdmin.db
       .collection("otp")
       .doc(email)
       .set({ code: code });
+
     const emailPromise = EmailController.sendEmail(
       email,
       "GoMatch: Verification OTP Code",
@@ -53,9 +58,9 @@ async function sendEmailOTP(req: Request, res: Response) {
                <p>The GoMatch Team</p>
                <p><small>If you have any questions, feel free to contact us at gomatchservice@gmail.com</small></p>`
     );
-
+    
     await Promise.all([otpPromise, emailPromise]);
-
+    
     res.status(200).json({ data: "Email sent" });
   } catch (error: any) {
     console.log(error);
@@ -107,6 +112,7 @@ async function register(req: Request, res: Response) {
     extension,
   } = req.body;
 
+
   if (
     !email ||
     !password ||
@@ -124,6 +130,7 @@ async function register(req: Request, res: Response) {
     res.status(400).send("Description must be filled");
     return;
   }
+
 
   if (!emailPattern.test(email)) {
     res.status(400).send("Please use your valid email");
