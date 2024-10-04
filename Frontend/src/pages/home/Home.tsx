@@ -28,7 +28,6 @@ export default function Home({ navigation }: Props) {
     const { user } = useAuth();
     const { theme } = useCustomTheme()
     const [styles, setStyles] = useState(getStyles(theme));
-
     const [filterModalOpen, setFilterModelOpen] = useState(false);
     const [swipeLimitModalOpen, setSwipeLimitModalOpen] = useState(false);
     const [notificationModalOpen, setNotificationModelOpen] = useState(false);

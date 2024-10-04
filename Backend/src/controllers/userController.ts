@@ -112,6 +112,9 @@ async function updateUserData(req: AuthRequest, res: Response) {
   if (firtPayment !== undefined) {
     updatedData["firtPayment"] = firtPayment;
   }
+  if (activeUntil !== undefined) {
+    updatedData["activeUntil"] = activeUntil;
+  }
   if (personality !== undefined) {
     updatedData["personality"] = personality;
   }
