@@ -55,6 +55,7 @@ async function getPartnerList(req: AuthRequest, res: Response) {
           description: data.description,
           profilePict: data.profileImage,
           age: calculateAge(data.dob),
+          personality: data.personality,
         };
       });
 

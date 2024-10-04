@@ -27,7 +27,15 @@ interface Props {
     handleSelectChat: (chatId: string) => void;
 }
 
+interface Location {
+    id: number;
+    name: string;
+    description: string;
+}
+
+
 const messageService = MessageService();
+
 
 export default function ChatModal({ chatDoc, handleSelectChat }: Props) {
     const to = chatDoc.to;
@@ -37,7 +45,9 @@ export default function ChatModal({ chatDoc, handleSelectChat }: Props) {
     const [textMessage, setTextMessage] = useState("");
     const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
 
-    const locations = [
+    
+
+    const locations1 = [
         {
             id: 1,
             name: "Starbucks Coffee",
@@ -54,6 +64,107 @@ export default function ChatModal({ chatDoc, handleSelectChat }: Props) {
             description: "A small bakery known for its fresh pastries.",
         },
     ];
+
+    const locations2 = [
+        {
+            id: 1,
+            name: "Pasta Fresca",
+            description: "An Italian eatery specializing in handmade pasta dishes.",
+        },
+        {
+            id: 2,
+            name: "Blooming Florals",
+            description: "A florist with a beautiful variety of fresh flowers and bouquets.",
+        },
+        {
+            id: 3,
+            name: "Zen Spa",
+            description: "A tranquil spa offering massages and relaxation therapies.",
+        },
+    ];
+
+    const locations3 = [
+        {
+            id: 1,
+            name: "The Book Nook",
+            description: "A quaint bookstore with a cozy reading corner.",
+        },
+        {
+            id: 2,
+            name: "FitPro Gym",
+            description: "A modern gym with top-notch equipment and personal trainers.",
+        },
+        {
+            id: 3,
+            name: "Picasso Art Gallery",
+            description: "An art gallery showcasing contemporary works.",
+        },
+    ];
+
+    const locations4 = [
+        {
+            id: 1,
+            name: "Green Grocer",
+            description: "A local grocery store offering fresh produce and organic items.",
+        },
+        {
+            id: 2,
+            name: "Sea Breeze Diner",
+            description: "A family-owned diner with a coastal theme and seafood dishes.",
+        },
+        {
+            id: 3,
+            name: "Starlight Cinema",
+            description: "A small movie theater with a retro ambiance.",
+        },
+    ];
+
+    const locations5 = [
+        {
+            id: 1,
+            name: "Java Juice Bar",
+            description: "A juice bar serving fresh fruit smoothies and wellness shots.",
+        },
+        {
+            id: 2,
+            name: "Mountain Sports",
+            description: "A store specializing in outdoor and sports equipment.",
+        },
+        {
+            id: 3,
+            name: "Tech Zone",
+            description: "An electronics shop with the latest gadgets and accessories.",
+        },
+    ];
+
+    const locations6 = [
+        {
+            id: 1,
+            name: "Sunset Lounge",
+            description: "A rooftop bar offering panoramic city views and signature cocktails.",
+        },
+        {
+            id: 2,
+            name: "Purrfect Pets",
+            description: "A pet store with a range of supplies and adorable pets.",
+        },
+        {
+            id: 3,
+            name: "Creative Crafts",
+            description: "A craft store stocked with supplies for all kinds of projects.",
+        },
+    ];
+
+    const randomLocation = Math.floor(Math.random() * 6) + 1;
+    let location: Location[] = [];
+
+    if (randomLocation == 1) location = locations1;
+    else if (randomLocation === 2) location = locations2;
+    else if (randomLocation === 3) location = locations3;
+    else if (randomLocation === 4) location = locations4;
+    else if (randomLocation === 5) location = locations5;
+    else if (randomLocation === 6) location = locations6;
+
 
     const scrollViewRef = useRef<ScrollView>(null);
     const textInputRef = useRef<TextInput>(null);
@@ -169,7 +280,7 @@ export default function ChatModal({ chatDoc, handleSelectChat }: Props) {
                                     <View style={styles.locationModalBackground}>
                                         <View style={styles.locationModalContent}>
                                             <FlatList
-                                                data={locations}
+                                                data={location}
                                                 keyExtractor={(item) => item.id.toString()}
                                                 renderItem={({ item }) => (
                                                     <TouchableOpacity
