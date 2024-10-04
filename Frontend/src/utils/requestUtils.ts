@@ -6,11 +6,10 @@ export async function createRequest(
   method?: string,
 ) {
   // const baseUrl = process.env.BACKEND_URL
-  const baseUrl = 'http://10.20.176.36:4001';
+  const baseUrl = 'http://192.168.68.104:4001';
 
   const headers = {'Content-Type': 'application/json'};
   const to = `${baseUrl}${url}`;
-  console.log(to);
   const result = await fetch(to, {
     method: method ?? 'POST',
     headers: headers,
@@ -30,7 +29,8 @@ export async function createRequestWithToken(
   method?: string,
 ) {
   // const baseUrl = process.env.BACKEND_URL
-  const baseUrl = 'http://10.20.176.36:4001';
+
+  const baseUrl = 'http:/192.168.68.104:4001';
   const token = (await AsyncStorage.getItem('authorization')) as string;
   const headers = {
     'Content-Type': 'application/json',

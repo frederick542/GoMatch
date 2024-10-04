@@ -64,18 +64,7 @@ async function swipe(to: string, type: string) {
     throw new Error("Error swiping")
 }
 
-async function getPremium(email : string) {
-    const url = '/user/getUserPremium'
-    const body = {
-        email : email
-    }
-    const result = await createRequestWithToken(url, body)
-    if (result.ok) {
-        return  (await result.json()).premiumStatus;
-    }
-    throw new Error("Error getUserData")
-}
 
 export default function UserService() {
-    return { updateUserData, getUserMatchOption, getPartner, removeFromMatch, swipe, getPremium }
+    return { updateUserData, getUserMatchOption, getPartner, removeFromMatch, swipe }
 }

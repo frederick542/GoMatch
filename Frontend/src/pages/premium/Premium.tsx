@@ -1,57 +1,128 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import useCustomTheme from "../../hooks/useCustomTheme";
-import CustomTheme from "../../models/CustomTheme";
-import PriceBorder from "./components/PriceBorder";
+import {View, Text, StyleSheet} from 'react-native';
+import useCustomTheme from '../../hooks/useCustomTheme';
+import CustomTheme from '../../models/CustomTheme';
+import PriceBorder from './components/PriceBorder';
+import useAuth from '../../hooks/useAuth';
 
 interface Props {
-    navigation: any;
+  navigation: any;
 }
 
-export default function Premium({ navigation }: Props) {
-    const { theme } = useCustomTheme();
-    const styles = getStyles(theme);
+export default function Premium({ navigation}: Props) {
+  const {user} = useAuth();
+  const first = user?.firtPayment
+  const {theme} = useCustomTheme();
+  const styles = getStyles(theme);
+  return (
+    <View style={styles.container}>
+      <Text
+        style={[
+          styles.Title,
+          {
+            paddingTop: 30,
+            fontSize: 37,
+          },
+        ]}>
+        Benefits
+      </Text>
+      <View style={styles.pointContainer}>
+        <Text style={styles.pointTitle}>Find your partner</Text>
+        <Text style={styles.botText}>
+          Start your journey to find the perfect match today!
+        </Text>
+      </View>
+      <View style={styles.pointContainer}>
+        <Text style={styles.pointTitle}>Know your personalities</Text>
+        <Text style={styles.botText}>
+          Discover your personality traits and find compatible partners.
+        </Text>
+      </View>
+      <View style={styles.pointContainer}>
+        <Text style={styles.pointTitle}>
+          Meet various persons with video call
+        </Text>
+        <Text style={styles.botText}>
+          Connect instantly with potential matches through video calls.
+        </Text>
+      </View>
+      <View style={styles.pointContainer}>
+        <Text style={styles.pointTitle}>Find the first place to date</Text>
+        <Text style={styles.botText}>
+          Find the first place to date Get personalized suggestions for your
+          ideal first date spot.
+        </Text>
+      </View>
+      <Text
+        style={[
+          styles.Title,
+          {
+            fontSize: 20,
+            paddingTop: 10,
+          },
+        ]}>
+        {first === true ? 'Start your journey' : 'Continue your journey'}
+      </Text>
 
-    const handleBackImgPress = () => {
-        navigation.goBack()
-    };
-
-    return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.backContainer} onPress={handleBackImgPress}>
-                <Image source={require("../../assets/back.png")} />
-            </TouchableOpacity>
-            <Text style={styles.topText}>Upgrade to Premium</Text>
-            <Text style={styles.botText}>Upgrade your account for more features</Text>
-            <PriceBorder Int={3} Price={150} navigation={navigation} />
-            <PriceBorder Int={5} Price={200} navigation={navigation} />
-        </View>
-    );
+      <View style={styles.packageContainer}>
+        {first === true && (
+          <PriceBorder type={'weekly'} navigation={navigation} />
+        )}
+        <PriceBorder type={'monthly'} navigation={navigation} />
+      </View>
+    </View>
+  );
 }
 
-const getStyles = (theme: CustomTheme) => StyleSheet.create({
+const getStyles = (theme: CustomTheme) =>
+  StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'white',
+      flex: 1,
+      backgroundColor: 'white',
     },
     backContainer: {
-        display: 'flex',
-        top: 20,
-        left: 20,
+      display: 'flex',
+      top: 20,
+      left: 20,
     },
-    topText: {
-        paddingTop: 30,
-        textAlign: 'center',
-        color: '#E94057',
-        fontSize: 37,
-        fontStyle: 'italic',
-        fontFamily: "ABeeZee",
+    Title: {
+      textAlign: 'center',
+      color: '#E94057',
+      fontStyle: 'italic',
+      fontFamily: 'ABeeZee',
+    },
+    pointTitle: {
+      paddingTop: 10,
+      textAlign: 'center',
+      color: 'black',
+      fontWeight: '600',
+      fontSize: 20,
+      fontStyle: 'italic',
+      fontFamily: 'ABeeZee',
     },
     botText: {
-        paddingTop: 10,
-        textAlign: 'center',
-        fontSize: 17.5,
-        color: '#000000',
-        marginBottom: 40,
-    }
-});
+      paddingTop: 5,
+      textAlign: 'center',
+      fontSize: 15.5,
+      color: '#5C5C5C',
+      paddingBottom: 5,
+    },
+    pointContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      alignSelf: 'center',
+      width: '90%',
+    },
+    packageContainer: {
+      display: 'flex',
+      position: 'relative',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      alignSelf: 'center',
+      width: '70%',
+      gap: 3,
+    },
+  });

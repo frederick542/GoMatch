@@ -7,17 +7,19 @@ import { getImageDownloadUrl, uploadImage } from "../utils/imageUtils";
 import { decodeJWTToken, generateJWTToken } from "../utils/jwtUtils";
 import { filterUserData } from "../utils/userUtils";
 
+const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 async function sendEmailOTP(req: Request, res: Response) {
   const { email }: { email: string } = req.body;
   if (!email) {
     res.status(400).send("Email is required");
     return;
   }
-  // if (!email.endsWith("@binus.ac.id")) {
-  //   res.status(400).send("Please use your binus.ac.id email");
-  //   return;
-  // }
-  
+
+  if (!emailPattern.test(email)) {
+    res.status(400).send("Please provide valid email");
+    return;
+  }
+
   try {
     const userSnapshot = await firebaseAdmin.db
       .collection("users")
@@ -31,7 +33,7 @@ async function sendEmailOTP(req: Request, res: Response) {
 
 
   } catch (error: any) {
-    console.log("error message: ",error.message)
+    console.log("error message: ", error.message);
     res.status(500).send(error.message);
   }
 
@@ -45,15 +47,23 @@ async function sendEmailOTP(req: Request, res: Response) {
 
     const emailPromise = EmailController.sendEmail(
       email,
-      "BINDER Verification OTP Code",
-      code
+      "GoMatch: Verification OTP Code",
+      `<h2>Dear User,</h2>
+               <p>Thank you for using GoMatch. Your verification code is:</p>
+               <h1 style="font-size: 2em; color: #4CAF50;">${code}</h1>
+               <p>Please enter this code in the application to verify your account.</p>
+               <p>If you did not request this, please ignore this email.</p>
+               <br>
+               <p>Best regards,</p>
+               <p>The GoMatch Team</p>
+               <p><small>If you have any questions, feel free to contact us at gomatchservice@gmail.com</small></p>`
     );
     
     await Promise.all([otpPromise, emailPromise]);
     
     res.status(200).json({ data: "Email sent" });
   } catch (error: any) {
-    console.log('hi gantneg', error)
+    console.log(error);
     res.status(500).send(error.message);
   }
 }
@@ -66,10 +76,10 @@ async function verifyEmailOTP(req: Request, res: Response) {
     return;
   }
 
-  // if (!email.endsWith("@binus.ac.id")) {
-  //   res.status(400).send("Please use your binus.ac.id email");
-  //   return;
-  // }
+  if (!emailPattern.test(email)) {
+    res.status(400).send("Please provide valid email");
+    return;
+  }
 
   const otpRecord = await firebaseAdmin.db.collection("otp").doc(email).get();
 
@@ -95,37 +105,37 @@ async function register(req: Request, res: Response) {
     email,
     password,
     dob,
-    binusian,
+    description,
     name,
-    campus,
     gender,
     profileImage,
     extension,
   } = req.body;
 
-  // if (
-  //   !email ||
-  //   !password ||
-  //   !dob ||
-  //   !binusian ||
-  //   !campus ||
-  //   !gender ||
-  //   !profileImage ||
-  //   !extension
-  // ) {
-  //   res.status(400).send("All fields must not be empty");
-  //   return;
-  // }
 
-  if (!binusian.match("^[0-9]{2}$")) {
-    res.status(400).send("Binusian must be 2 digits");
+  if (
+    !email ||
+    !password ||
+    !dob ||
+    !description ||
+    !gender ||
+    !profileImage ||
+    !extension
+  ) {
+    res.status(400).send("All fields must not be empty");
     return;
   }
 
-  // if (!email.endsWith("@binus.ac.id")) {
-  //   res.status(400).send("Please use your binus.ac.id email");
-  //   return;
-  // }
+  if (!description) {
+    res.status(400).send("Description must be filled");
+    return;
+  }
+
+
+  if (!emailPattern.test(email)) {
+    res.status(400).send("Please use your valid email");
+    return;
+  }
 
   if (password.length < 6) {
     res.status(400).send("Password must be at least 6 characters");
@@ -143,24 +153,24 @@ async function register(req: Request, res: Response) {
     const timestamp = new Date().toISOString();
     const newPath = `profileImages/${email}_${timestamp}.${extension}`;
     const profileImageRef = await uploadImage(newPath, profileImage);
-    const profileImageUrl = (await getImageDownloadUrl(profileImageRef))[0];
-
+    const profileImageUrl = await getImageDownloadUrl(profileImageRef);
     const userData = {
       dob: dob,
       name: name,
       password: encryted_password,
-      binusian: binusian,
-      campus: campus,
+      description: description,
       gender: gender,
       profileImage: profileImageUrl,
       match: [],
       request: [],
       likedBy: [],
       swipe: {},
-      premium: false,
+      activeUntil: new Date().toISOString(),
       favorite: [],
       swipeCount: 0,
       swipeDate: new Date().toISOString(),
+      firtPayment: true,
+      personality: ""
     };
 
     await firebaseAdmin.db.collection("users").doc(email).set(userData);
@@ -202,8 +212,6 @@ async function login(req: Request, res: Response) {
 
     const token = generateJWTToken(email);
     const temp = filterUserData(user);
-
-    console.log(temp.profileImage);
 
     res.status(200).json({ data: { user: temp, token: token } });
   } catch (error: any) {

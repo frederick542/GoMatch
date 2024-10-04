@@ -34,8 +34,6 @@ export default function AuthProvider({ children }: { children: JSX.Element }) {
         const authService = AuthService()
         try {
             let user = await authService.verifyToken()
-            console.log(user);
-            
             if (!user) return logout()
             user.dob = new Date(user?.dob)
             setUser(user)
