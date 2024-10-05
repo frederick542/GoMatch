@@ -22,7 +22,6 @@ import {
 } from 'react-native-alert-notification';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import MessageService from '../../services/messageService';
-import match from '.';
 import {useFocusEffect} from '@react-navigation/native';
 
 interface MatchData {

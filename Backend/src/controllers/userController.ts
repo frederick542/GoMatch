@@ -133,7 +133,7 @@ async function updateUserData(req: AuthRequest, res: Response) {
     const profileImageUrl = await uploadImage(newPath, profileImage);
     updatedData["profileImage"] = (
       await getImageDownloadUrl(profileImageUrl)
-    )[0];
+    );
   }
 
   await firebaseAdmin.db

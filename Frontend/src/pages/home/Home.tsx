@@ -34,7 +34,6 @@ export default function Home({ navigation }: Props) {
     const [matchModalOpen, setMatchModalOpen] = useState(false);
 
     const [notifications, setNotifications] = useState<Notification[]>([]);
-
     const [filter, setFilter] = useState({
         gender: user?.gender === 'Male' ? 'Female' : 'Male',
         minAge: 17,

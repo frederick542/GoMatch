@@ -112,7 +112,7 @@ export default function VideoCall({route}: any) {
   async function makeConnection() {
     // ws = new WebSocket(process.env.WEBSOCKET_URL!);
 
-    ws = new WebSocket('ws://10.20.177.93:4001');
+    ws = new WebSocket('ws://192.168.43.21:4001');
     ws.onopen = () => handleOnOpenWebSocket(ws!);
     ws.onmessage = event => handleOnMessageWebSocket(event);
     ws.onclose = () => handleOnCloseWebSocket();
