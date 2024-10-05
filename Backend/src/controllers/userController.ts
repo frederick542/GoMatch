@@ -7,6 +7,7 @@ import { getImageDownloadUrl, uploadImage } from "../utils/imageUtils";
 import { differenceInYears, parseISO } from "date-fns";
 import NotificationController from "./notificationController";
 
+
 async function getPartnerList(req: AuthRequest, res: Response) {
   interface ExtendedUser extends User {
     type: string;

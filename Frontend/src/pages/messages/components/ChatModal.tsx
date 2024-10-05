@@ -21,6 +21,9 @@ import CustomButton from "../../../components/CustomButton";
 import ChatBubble from "./ChatBubble";
 import { renderProfileImage } from "../../../utils/imageUtils";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import useAuth from "../../../hooks/useAuth";
+import { fetchUserDoc } from './userFetcher'; 
+import User from "../../../models/User";
 
 interface Props {
     chatDoc: Chat;
@@ -34,18 +37,38 @@ interface Location {
 }
 
 
+
 const messageService = MessageService();
 
-
 export default function ChatModal({ chatDoc, handleSelectChat }: Props) {
+    const { user } = useAuth();
+    
     const to = chatDoc.to;
     const { theme } = useCustomTheme();
     const styles = getStyles(theme);
     const [messages, setMessages] = useState<Message[]>([]);
     const [textMessage, setTextMessage] = useState("");
     const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
-
+    const [otherUserDoc, setOtherUserDoc] = useState<User | null>(null);
+    const [personalityState, setPersonalityState] = useState<string | null>(null);
+    useEffect(() => {
+        async function getOtherUserDoc() {
+            const toEmail = chatDoc.to.email;
+            if (toEmail) {
+                const fetchedUserDoc = await fetchUserDoc(toEmail);
+                setOtherUserDoc(fetchedUserDoc??null);
+            }
+        }
+        
+        getOtherUserDoc();
+    }, [chatDoc]);
     
+    useEffect(() => {
+        if (otherUserDoc) {
+            setPersonalityState(otherUserDoc.personality);
+        }
+    }, [otherUserDoc]);
+    console.log(personalityState);   
 
     const locations1 = [
         {
@@ -158,12 +181,12 @@ export default function ChatModal({ chatDoc, handleSelectChat }: Props) {
     const randomLocation = Math.floor(Math.random() * 6) + 1;
     let location: Location[] = [];
 
-    if (randomLocation == 1) location = locations1;
-    else if (randomLocation === 2) location = locations2;
-    else if (randomLocation === 3) location = locations3;
-    else if (randomLocation === 4) location = locations4;
-    else if (randomLocation === 5) location = locations5;
-    else if (randomLocation === 6) location = locations6;
+    if (personalityState == "The Romantic") location = locations1;
+    else if (personalityState == "The Adventurer") location = locations2;
+    else if (personalityState == "The Intellectual") location = locations3;
+    else if (personalityState == "The Caregiver") location = locations4;
+    else if (personalityState == "The Fun-Seeker") location = locations5;
+    else if (personalityState == "The Realist") location = locations6;
 
 
     const scrollViewRef = useRef<ScrollView>(null);
@@ -179,6 +202,7 @@ export default function ChatModal({ chatDoc, handleSelectChat }: Props) {
     const handleScroll = (val: boolean) => {
         setIsUserScrolling(val);
     };
+    
 
     const { executeAsync: handleSendMessage } = useAsyncHandler(async function () {
         if (textMessage !== "") {
