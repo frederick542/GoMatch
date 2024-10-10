@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import useCustomTheme from '../../hooks/useCustomTheme';
 import CustomTheme from '../../models/CustomTheme';
 import PriceBorder from './components/PriceBorder';
@@ -9,13 +9,16 @@ interface Props {
   navigation: any;
 }
 
-export default function Premium({ navigation}: Props) {
+export default function Premium({navigation}: Props) {
   const {user} = useAuth();
-  const first = user?.firtPayment
+  const first = user?.firtPayment;
   const {theme} = useCustomTheme();
   const styles = getStyles(theme);
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.skipButtonContainer}>
+        <Text style={styles.skipButtonText}>Skip</Text>
+      </TouchableOpacity>
       <Text
         style={[
           styles.Title,
@@ -26,6 +29,7 @@ export default function Premium({ navigation}: Props) {
         ]}>
         Benefits
       </Text>
+
       <View style={styles.pointContainer}>
         <Text style={styles.pointTitle}>Find your partner</Text>
         <Text style={styles.botText}>
@@ -79,6 +83,22 @@ const getStyles = (theme: CustomTheme) =>
     container: {
       flex: 1,
       backgroundColor: 'white',
+    },
+    skipButtonContainer: {
+      position: 'absolute',
+      top: 20,
+      right: 20,
+      borderWidth: 2,
+      borderColor: '#E94057',
+      borderRadius: 10,
+    },
+    skipButtonText: {
+      color: 'black',
+      paddingVertical: 5, 
+      paddingHorizontal: 10, 
+      fontSize: 16, 
+      fontWeight: 'bold',
+      textAlign: 'center',
     },
     backContainer: {
       display: 'flex',
