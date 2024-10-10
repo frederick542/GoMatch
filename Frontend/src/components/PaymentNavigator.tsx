@@ -13,6 +13,7 @@ export default function PaymentNavigator({setShowPaymentNavigator}: Props) {
         name="Package"
         component={Premium}
         options={{headerShown: false}}
+        initialParams={{setShowPaymentNavigator}}
       />
       <NativeStack.Screen
         name="Payment"

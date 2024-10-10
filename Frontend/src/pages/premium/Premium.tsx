@@ -7,16 +7,21 @@ import useAuth from '../../hooks/useAuth';
 
 interface Props {
   navigation: any;
+  route: any
 }
 
-export default function Premium({navigation}: Props) {
+export default function Premium({navigation, route}: Props) {
   const {user} = useAuth();
   const first = user?.firtPayment;
   const {theme} = useCustomTheme();
+  const {setShowPaymentNavigator} = route.params;
   const styles = getStyles(theme);
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.skipButtonContainer}>
+      <TouchableOpacity style={styles.skipButtonContainer} onPress={() => {
+        console.log('kont')
+        setShowPaymentNavigator(false)
+      }}>
         <Text style={styles.skipButtonText}>Skip</Text>
       </TouchableOpacity>
       <Text
@@ -91,12 +96,13 @@ const getStyles = (theme: CustomTheme) =>
       borderWidth: 2,
       borderColor: '#E94057',
       borderRadius: 10,
+      zIndex: 10, 
     },
     skipButtonText: {
       color: 'black',
-      paddingVertical: 5, 
-      paddingHorizontal: 10, 
-      fontSize: 16, 
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      fontSize: 16,
       fontWeight: 'bold',
       textAlign: 'center',
     },
