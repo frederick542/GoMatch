@@ -7,6 +7,7 @@ export default interface User {
   profileImage: string;
   activeUntil: string;
   theme: string;
+  personality: string;
   firtPayment: boolean;
   personality:string;
 }

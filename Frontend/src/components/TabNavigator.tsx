@@ -94,7 +94,7 @@ export default function TabNavigator() {
 
   useEffect(() => {
     if (user != null) {
-      if (new Date(user?.activeUntil) <= new Date()) {
+      if (user?.personality == "") {
         setShowPaymentNavigator(true);
       } else {
         setShowPaymentNavigator(false);
