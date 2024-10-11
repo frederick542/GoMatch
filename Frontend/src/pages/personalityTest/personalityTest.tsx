@@ -243,6 +243,7 @@ export default function PersonalityTest({route}: {route: any}) {
 
   return (
     <View style={styles.container}>
+      <Image style={styles.logo} source={require('../../assets/Logo.jpg')} />
       {quizFinished ? (
         <View>
           {selectedTieOption ? (
@@ -410,5 +411,13 @@ const getStyles = (theme: CustomTheme) =>
       height: 50,
       resizeMode: 'contain',
       marginBottom: 10,
+    },
+    logo: {
+      width: 40,
+      height: 40,
+      borderRadius: 15,
+      position: 'absolute',
+      top: 20,
+      left: 20,
     },
   });
