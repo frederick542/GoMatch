@@ -15,6 +15,8 @@ interface Props {
 export default function Profile({ navigation }: Props) {
     const { user, logout } = useAuth();
     const { theme } = useCustomTheme();
+    const isSubscriptionActive =
+      user?.activeUntil && new Date(user.activeUntil) > new Date();
 
     const styles = getStyles(theme);
 
@@ -23,94 +25,106 @@ export default function Profile({ navigation }: Props) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-                <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>Profile</Text>
-            <Image style={styles.profileImage} source={renderProfileImage(user?.profileImage)} />
-            <TextHolder UserInfo={user?.name} TextLabel={"Name"}></TextHolder>
-            <TextHolder UserInfo={user?.gender} TextLabel={"Gender"} />
-            <TextHolder UserInfo={user?.description} TextLabel={"Description"} />
-            <TextHolder UserInfo={formatDate(user?.dob!)} TextLabel={"Date of Birth"} />
-            <CustomButton style={[styles.button]} onPress={logout}>
-                <Text style={[styles.buttonText, { color: 'white' }]}>Logout</Text>
-            </CustomButton>
-        </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+          <Text style={styles.editButtonText}>Edit</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>Profile</Text>
+        <Image
+          style={styles.profileImage}
+          source={renderProfileImage(user?.profileImage)}
+        />
+        <TextHolder UserInfo={user?.name} TextLabel={'Name'}></TextHolder>
+        <TextHolder UserInfo={user?.gender} TextLabel={'Gender'} />
+        <TextHolder UserInfo={user?.description} TextLabel={'Description'} />
+        <TextHolder
+          UserInfo={formatDate(user?.dob!)}
+          TextLabel={'Date of Birth'}
+        />
+        <CustomButton style={[styles.button]} onPress={logout}>
+          <Text style={[styles.buttonText, {color: 'white'}]}>Logout</Text>
+        </CustomButton>
+        {!isSubscriptionActive && (
+          <TouchableOpacity
+            style={styles.upgradeButton}
+            onPress={() => navigation.navigate('Premium')}>
+            <Text style={styles.upgradeText}>Upgrade to Premium</Text>
+          </TouchableOpacity>
+        )}
+      </SafeAreaView>
     );
 }
 
 const screenWidth = Dimensions.get('window').width
 const screenHeight = Dimensions.get('window').height
 
-const getStyles = (theme: CustomTheme) => StyleSheet.create({
+const getStyles = (theme: CustomTheme) =>
+  StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: theme.background,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingTop: 20,
+      flex: 1,
+      flexDirection: 'column',
+      backgroundColor: theme.background,
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      paddingTop: 20,
     },
     title: {
-        marginTop: screenHeight * 0.03,
-        fontSize: 36,
-        fontStyle: "italic",
-        color: theme.text,
-        fontFamily: "ABeeZee",
-        marginBottom: 15,
+      marginTop: screenHeight * 0.03,
+      fontSize: 36,
+      fontStyle: 'italic',
+      color: theme.text,
+      fontFamily: 'ABeeZee',
+      marginBottom: 15,
     },
     profileImage: {
-        width: screenHeight * 0.125,
-        height: screenHeight * 0.125,
-        borderRadius: 20,
-        marginBottom: 20,
+      width: screenHeight * 0.125,
+      height: screenHeight * 0.125,
+      borderRadius: 20,
+      marginBottom: 20,
     },
     button: {
-        width: '80%',
-        fontSize: 18,
-        color: theme.text,
-        borderColor: '#E8E6EA',
-        borderWidth: 1,
-        padding: 10,
-        paddingVertical: 15,
-        borderRadius: 10,
-        marginVertical: 3,
-        alignItems: 'center',
-        justifyContent: 'center',
+      width: '80%',
+      fontSize: 18,
+      color: theme.text,
+      borderColor: '#E8E6EA',
+      borderWidth: 1,
+      padding: 10,
+      paddingVertical: 15,
+      borderRadius: 10,
+      marginVertical: 3,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     buttonText: {
-        color: theme.text,
-        fontWeight: 'bold',
+      color: theme.text,
+      fontWeight: 'bold',
     },
     editButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-        padding: 10,
-        backgroundColor: theme.primary,
-        borderColor: '#E8E6EA',
-        borderWidth: 1,
-        borderRadius: 5,
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      padding: 10,
+      backgroundColor: theme.primary,
+      borderColor: '#E8E6EA',
+      borderWidth: 1,
+      borderRadius: 5,
     },
     editButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
+      color: 'white',
+      fontWeight: 'bold',
     },
     backContainer: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
+      position: 'absolute',
+      top: 10,
+      left: 10,
     },
-    backImg: {
-
-    },
+    backImg: {},
     upgradeButton: {
-        marginTop: 10,
+      marginTop: 10,
     },
     upgradeText: {
-        fontStyle: "italic",
-        color: 'gray',
-        fontFamily: 'ABeeZee'
+      fontStyle: 'italic',
+      color: 'gray',
+      fontFamily: 'ABeeZee',
     },
-});
+  });

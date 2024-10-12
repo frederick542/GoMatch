@@ -62,7 +62,11 @@ export default function Match({navigation}: any) {
 
   const toggleShow = () => {
     if (show == 'match') {
-      setShow('requested');
+      if (user.activeUntil && new Date(user.activeUntil) > new Date()) {
+        setShow('requested');
+      } else {
+        return false;
+      }
     } else if (show == 'requested') {
       setShow('match');
     }

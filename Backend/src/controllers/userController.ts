@@ -310,6 +310,20 @@ async function swipe(req: AuthRequest, res: Response) {
       },
     } as any;
 
+     if (user.activeUntil && new Date(user.activeUntil) < new Date()) {
+       if (Date.now() - new Date(userData.swipeDate).getTime() < 86400000) {
+         console.log("swipeCount", userData.swipeCount);
+
+         if (userData.swipeCount >= 15) {
+           return res.status(200).send("limit");
+         }
+         updatedData.swipeCount = userData.swipeCount + 1;
+       } else {
+         updatedData.swipeCount = 1;
+         updatedData.swipeDate = new Date().toISOString();
+       }
+     }
+
     const toDoc = await firebaseAdmin.db.collection("users").doc(to).get();
     const toData = {
       ...toDoc.data(),

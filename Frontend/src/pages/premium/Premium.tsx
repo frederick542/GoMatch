@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import useCustomTheme from '../../hooks/useCustomTheme';
 import CustomTheme from '../../models/CustomTheme';
 import PriceBorder from './components/PriceBorder';
@@ -7,15 +7,43 @@ import useAuth from '../../hooks/useAuth';
 
 interface Props {
   navigation: any;
+  route: any;
 }
 
-export default function Premium({ navigation}: Props) {
+export default function Premium({navigation, route}: Props) {
   const {user} = useAuth();
-  const first = user?.firtPayment
+  const first = user?.firtPayment;
   const {theme} = useCustomTheme();
   const styles = getStyles(theme);
+  const {setShowPaymentNavigator = null} = route.params || {};
+  const personality = user?.personality;
+  const handleBackImgPress = () => {
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
+      <>
+        {user && user.personality !== '' ? (
+          <TouchableOpacity
+            style={styles.backContainer}
+            onPress={handleBackImgPress}>
+            <Image source={require('../../assets/back.png')} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.skipButtonContainer}
+            onPress={() => {
+              if (personality === '') {
+                navigation.navigate('PersonalityTest');
+              } else {
+                setShowPaymentNavigator(false);
+              }
+            }}>
+            <Text style={styles.skipButtonText}>Skip</Text>
+          </TouchableOpacity>
+        )}
+      </>
       <Text
         style={[
           styles.Title,
@@ -63,7 +91,6 @@ export default function Premium({ navigation}: Props) {
         ]}>
         {first === true ? 'Start your journey' : 'Continue your journey'}
       </Text>
-
       <View style={styles.packageContainer}>
         {first === true && (
           <PriceBorder type={'weekly'} navigation={navigation} />
@@ -79,6 +106,24 @@ const getStyles = (theme: CustomTheme) =>
     container: {
       flex: 1,
       backgroundColor: 'white',
+    },
+    skipButtonContainer: {
+      position: 'absolute',
+      top: 20,
+      right: 20,
+      borderWidth: 2,
+      borderColor: '#E94057',
+      borderRadius: 10,
+      zIndex: 10,
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      backgroundColor: 'white',
+    },
+    skipButtonText: {
+      color: 'black',
+      fontSize: 16,
+      fontWeight: 'bold',
+      textAlign: 'center',
     },
     backContainer: {
       display: 'flex',

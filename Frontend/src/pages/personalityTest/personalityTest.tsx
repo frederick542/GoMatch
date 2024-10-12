@@ -299,6 +299,7 @@ export default function PersonalityTest({route}: {route: any}) {
                     });
                     setQuizFinished(false);
                     setSelectedTieOption(null);
+                   
                     setShowPaymentNavigator(false);
                   } catch (error) {
                     console.error('Error updating user data:', error);
