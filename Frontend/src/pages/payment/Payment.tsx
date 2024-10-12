@@ -24,13 +24,13 @@ export default function Payment({navigation, route}: Props) {
   const {setUser} = useAuth();
   const {theme} = useCustomTheme();
   const styles = getStyles(theme);
-  const {setShowPaymentNavigator} = route.params;
+  const {setShowPaymentNavigator = null} = route.params || {};
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const {user} = useAuth();
-  const first = user?.firtPayment;
+  const personality = user?.personality;
 
   const handleBackImgPress = () => {
-    navigation.navigate('Package');
+     navigation.goBack();
   };
 
   const RadioButton = ({
@@ -75,10 +75,14 @@ export default function Payment({navigation, route}: Props) {
       {
         text: 'OK',
         onPress: () => {
-          if (first == true) {
+          if (personality == "") {
             navigation.navigate('PersonalityTest');
           } else {
-            setShowPaymentNavigator(false);
+            try {
+              navigation.navigate('Home');
+            } catch (error) {
+              setShowPaymentNavigator(false);
+            }  
           }
         },
       },

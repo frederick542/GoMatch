@@ -11,6 +11,7 @@ import Payment from '../pages/payment/Payment';
 import {useEffect, useState} from 'react';
 import useAuth from '../hooks/useAuth';
 import PaymentNavigator from './PaymentNavigator';
+import Premium from '../pages/premium';
 
 const WrapperStack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -94,7 +95,7 @@ export default function TabNavigator() {
 
   useEffect(() => {
     if (user != null) {
-      if (new Date(user?.activeUntil) <= new Date()) {
+      if (user?.personality == "") {
         setShowPaymentNavigator(true);
       } else {
         setShowPaymentNavigator(false);
@@ -125,6 +126,15 @@ export default function TabNavigator() {
             name="EditProfile"
             component={EditProfile}
             options={{headerShown: false}}
+          />
+          <WrapperStack.Screen
+            name="Premium"
+            options={{headerShown: false}}
+            component={() => (
+              <PaymentNavigator
+                setShowPaymentNavigator={setShowPaymentNavigator}
+              />
+            )}
           />
         </>
       )}
