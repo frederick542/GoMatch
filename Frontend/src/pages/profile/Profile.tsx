@@ -51,6 +51,7 @@ export default function Profile({ navigation }: Props) {
             <Text style={styles.upgradeText}>Upgrade to Premium</Text>
           </TouchableOpacity>
         )}
+        <Text style={styles.upgradeText}>Contact us: gomatchservice@gmail.com</Text>
       </SafeAreaView>
     );
 }
