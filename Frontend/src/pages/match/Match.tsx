@@ -34,6 +34,16 @@ interface MatchData {
 }
 
 export default function Match({navigation}: any) {
+  const AdBanner = () => {
+    return (
+      <View style={styles.adBannerContainer}>
+        <Image
+          style={styles.adBanner}
+          source={require('../match/ad.jpg')}
+        />
+      </View>
+    );
+  };
   const [show, setShow] = useState<string>('match');
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
@@ -197,6 +207,7 @@ export default function Match({navigation}: any) {
           </View>
         </View>
       </ScrollView>
+      <AdBanner />
       <RBSheet
         ref={refRBSheet}
         height={650}
@@ -358,5 +369,19 @@ const getStyles = (theme: CustomTheme) =>
       color: 'white',
       fontFamily: 'ABeeZee',
       fontSize: 16,
+    },
+    adBannerContainer: {
+      position: 'absolute',
+      bottom: 20,
+      width: '100%',
+      height: 100,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000,
+    },
+    adBanner: {
+      width: '80%',
+      height: '100%',
+      resizeMode: 'cover',
     },
   });

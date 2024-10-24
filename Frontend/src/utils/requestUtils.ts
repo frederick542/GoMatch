@@ -6,7 +6,7 @@ export async function createRequest(
   method?: string,
 ) {
   // const baseUrl = process.env.BACKEND_URL
-  const baseUrl = 'http://192.168.68.105:4001';
+  const baseUrl = 'http://192.168.1.8:4001';
 
   const headers = {'Content-Type': 'application/json'};
   const to = `${baseUrl}${url}`;
@@ -30,7 +30,7 @@ export async function createRequestWithToken(
 ) {
   // const baseUrl = process.env.BACKEND_URL
 
-  const baseUrl = 'http://192.168.68.105:4001';
+  const baseUrl = 'http://192.168.1.8:4001';
   const token = (await AsyncStorage.getItem('authorization')) as string;
   const headers = {
     'Content-Type': 'application/json',
