@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, View, Image } from "react-native";
 import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from "react";
 import Chat from "../../models/Chat";
@@ -14,6 +14,16 @@ interface Props {
 }
 
 export default function Messages({ route }: Props) {
+    const AdBanner = () => {
+        return (
+            <View style={styles.adBannerContainer}>
+                <Image
+                    style={styles.adBanner}
+                    source={require('../messages/ad.jpg')}
+                />
+            </View>
+        );
+    };
     const chatIdParam = route.params?.chatId
 
     const { theme } = useCustomTheme()
@@ -74,8 +84,11 @@ export default function Messages({ route }: Props) {
             <View style={styles.topBar}>
                 <TextInput placeholder="Search" value={search} onChangeText={setSearch} style={styles.searchBar} placeholderTextColor={'gray'} />
             </View>
-            <View style={styles.chatList}>
+            {/* <View style={styles.chatList}> */}
                 <Text style={styles.subtitle}>Messages</Text>
+            {/* </View> */}
+                <AdBanner />
+            <View style={styles.chatList}>
                 <ScrollView style={styles.chatScrollView}>
                     {chatDocs.filter(chat => chat.to.name.includes(search)).map((chatDoc) => {
                         return (
@@ -117,7 +130,10 @@ const getStyles = (theme: CustomTheme) => StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         fontFamily: 'ABeeZee',
-        color: theme.text
+        color: theme.text,
+        paddingHorizontal: 30,
+        paddingVertical: 5,
+        gap: 10,
     },
     chatList: {
         flex: 1,
@@ -131,5 +147,17 @@ const getStyles = (theme: CustomTheme) => StyleSheet.create({
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
+    },
+    adBannerContainer: {
+        width: '100%',
+        height: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    adBanner: {
+        width: '80%',
+        height: '100%',
+        resizeMode: 'cover',
     },
 })
