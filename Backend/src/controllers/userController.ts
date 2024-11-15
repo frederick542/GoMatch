@@ -7,7 +7,6 @@ import { getImageDownloadUrl, uploadImage } from "../utils/imageUtils";
 import { differenceInYears, parseISO } from "date-fns";
 import NotificationController from "./notificationController";
 
-
 async function getPartnerList(req: AuthRequest, res: Response) {
   interface ExtendedUser extends User {
     type: string;
@@ -87,7 +86,7 @@ async function updateUserData(req: AuthRequest, res: Response) {
     extension,
     description,
     firtPayment,
-    personality
+    personality,
   } = req.body;
   const updatedData = {} as any;
 
@@ -131,9 +130,7 @@ async function updateUserData(req: AuthRequest, res: Response) {
     const timestamp = new Date().toISOString();
     const newPath = `profileImages/${user.email}_${timestamp}.${extension}`;
     const profileImageUrl = await uploadImage(newPath, profileImage);
-    updatedData["profileImage"] = (
-      await getImageDownloadUrl(profileImageUrl)
-    );
+    updatedData["profileImage"] = await getImageDownloadUrl(profileImageUrl);
   }
 
   await firebaseAdmin.db
@@ -310,19 +307,19 @@ async function swipe(req: AuthRequest, res: Response) {
       },
     } as any;
 
-     if (user.activeUntil && new Date(user.activeUntil) < new Date()) {
-       if (Date.now() - new Date(userData.swipeDate).getTime() < 86400000) {
-         console.log("swipeCount", userData.swipeCount);
+    if (user.activeUntil && new Date(user.activeUntil) < new Date()) {
+      if (Date.now() - new Date(userData.swipeDate).getTime() < 86400000) {
+        console.log("swipeCount", userData.swipeCount);
 
-         if (userData.swipeCount >= 15) {
-           return res.status(200).send("limit");
-         }
-         updatedData.swipeCount = userData.swipeCount + 1;
-       } else {
-         updatedData.swipeCount = 1;
-         updatedData.swipeDate = new Date().toISOString();
-       }
-     }
+        if (userData.swipeCount >= 1) {
+          return res.status(200).send("limit");
+        }
+        updatedData.swipeCount = userData.swipeCount + 1;
+      } else {
+        updatedData.swipeCount = 1;
+        updatedData.swipeDate = new Date().toISOString();
+      }
+    }
 
     const toDoc = await firebaseAdmin.db.collection("users").doc(to).get();
     const toData = {
@@ -359,12 +356,106 @@ async function swipe(req: AuthRequest, res: Response) {
   }
 }
 
+async function block(req: AuthRequest, res: Response) {
+  const user = req.user as User;
+  const { to, reason, chatId } = req.body;
+  if (!to) return res.status(400).send("Invalid request");
+  try {
+    const userDoc = await firebaseAdmin.db
+      .collection("users")
+      .doc(user.email)
+      .get();
+
+    const toDoc = await firebaseAdmin.db.collection("users").doc(to).get();
+
+    if (!userDoc.exists || !toDoc.exists) {
+      return res.status(404).send("User not found.");
+    }
+
+    await userDoc.ref.update({
+      likedBy: firebaseAdmin.admin.firestore.FieldValue.arrayRemove(to),
+      request: firebaseAdmin.admin.firestore.FieldValue.arrayRemove(to),
+      match: firebaseAdmin.admin.firestore.FieldValue.arrayRemove(to),
+      swipe: {
+        ...userDoc.data()?.swipe,
+        [to]: true,
+      },
+    });
+    await toDoc.ref.update({
+      blocked: firebaseAdmin.admin.firestore.FieldValue.arrayUnion({
+        by: user.email,
+        reason: reason,
+      }),
+      swipe: {
+        ...toDoc.data()?.swipe,
+        [user.email]: true,
+      },
+    });
+    const chatRef = await firebaseAdmin.db.collection("messages").doc(chatId);
+    await chatRef.delete();
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).send(error.message);
+  }
+}
+
+async function resetMatches(req: AuthRequest, res: Response) {
+  try {
+    const usersRef = await firebaseAdmin.db.collection("users");
+
+    const usersSnapshot = await usersRef.get();
+
+    if (!usersSnapshot.empty) {
+      for (const doc of usersSnapshot.docs) {
+        const userRef = usersRef.doc(doc.id);
+        await userRef.update({
+          likedBy: [],
+          match: [],
+          favorite: [],
+          request: [],
+          swipe: {},
+          swipeCount: 0,
+          blocked: []
+        });
+        console.log(`Cleared fields for user: ${doc.id}`);
+      }
+    } else {
+      console.log("No users found to reset.");
+    }
+
+    const chatRef = await firebaseAdmin.db.collection("messages");
+    const chatSnapshot = await chatRef.get();
+    if (!chatSnapshot.empty) {
+      for (const doc of chatSnapshot.docs) {
+        try {
+          await chatRef.doc(doc.id).delete();
+          console.log(`Deleted message document: ${doc.id}`);
+        } catch (error) {
+          console.error(`Error deleting message document ${doc.id}:`, error);
+        }
+      }
+    }
+    return res
+      .status(200)
+      .json({ success: true, message: "Reset matches and deleted messages." });
+  } catch (error) {
+    console.error("Error resetting matches:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to reset matches.",
+      error: error,
+    });
+  }
+}
+
 const userController = {
   getPartnerList,
   getUserMatchOption,
   updateUserData,
   removePartner,
   swipe,
+  resetMatches,
+  block,
 };
 
 export default userController;

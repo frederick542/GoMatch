@@ -9,5 +9,7 @@ UserRouter.post('/getUserMatchOption', verifyToken, userController.getUserMatchO
 UserRouter.post('/removePartner', verifyToken, userController.removePartner);
 UserRouter.post('/updateUserData', verifyToken, userController.updateUserData)
 UserRouter.post('/swipe', verifyToken, userController.swipe);
+UserRouter.post('/resetMatches', userController.resetMatches);
+UserRouter.post("/block", verifyToken, userController.block);
 
 export default UserRouter;

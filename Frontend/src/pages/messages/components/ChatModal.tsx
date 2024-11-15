@@ -20,10 +20,10 @@ import Message from '../../../models/Message';
 import CustomButton from '../../../components/CustomButton';
 import ChatBubble from './ChatBubble';
 import {renderProfileImage} from '../../../utils/imageUtils';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import useAuth from '../../../hooks/useAuth';
 import {fetchUserDoc} from './userFetcher';
 import User from '../../../models/User';
+import UserService from '../../../services/userService';
 
 interface Props {
   chatDoc: Chat;
@@ -37,7 +37,7 @@ interface Location {
 }
 
 const messageService = MessageService();
-
+const userService = UserService();
 export default function ChatModal({chatDoc, handleSelectChat}: Props) {
   const {user} = useAuth();
 
@@ -66,7 +66,6 @@ export default function ChatModal({chatDoc, handleSelectChat}: Props) {
       setPersonalityState(otherUserDoc.personality);
     }
   }, [otherUserDoc]);
-  console.log(personalityState);
 
   const locations1 = [
     {
@@ -197,7 +196,7 @@ export default function ChatModal({chatDoc, handleSelectChat}: Props) {
   const scrollViewRef = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
-
+  
   useEffect(() => {
     if (scrollViewRef.current && !isUserScrolling) {
       scrollViewRef.current.scrollToEnd({animated: false});
@@ -242,102 +241,204 @@ export default function ChatModal({chatDoc, handleSelectChat}: Props) {
     setTextMessage(`How about we meet at ${location.name}?`);
     setIsLocationModalVisible(false);
   };
+  const [isChatModalVisible, setIsChatModalVisible] = useState(true);
+  const [isBlockReportModalVisible, setIsBlockReportModalVisible] =
+    useState(false);
+  const [blockReason, setBlockReason] = useState(''); 
+  const [isReasonModalVisible, setIsReasonModalVisible] = useState(false);
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={true}
-      onRequestClose={() => handleSelectChat('')}>
-      <TouchableWithoutFeedback onPress={() => handleSelectChat('')}>
-        <View style={styles.modalContainer}>
-          <TouchableWithoutFeedback>
-            <View style={styles.modalContent}>
-              <View style={styles.profileInformation}>
-                <Image
-                  style={styles.profileImage}
-                  source={renderProfileImage(to.profileImage)}
-                />
-                <View style={styles.profileDetail}>
-                  <Text style={styles.displayName}>{to.name}</Text>
-                </View>
-              </View>
-
-              <ScrollView
-                style={styles.chatBubbleList}
-                ref={scrollViewRef}
-                onScrollBeginDrag={() => handleScroll(true)}
-                onScrollEndDrag={() => handleScroll(false)}>
-                {[...messages.values()].map(message => (
-                  <ChatBubble
-                    key={message.id}
-                    message={message}
-                    to={chatDoc.to}
+    <>
+      {/* Main Chat Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={true}
+        onRequestClose={() => handleSelectChat('')}>
+        <TouchableWithoutFeedback onPress={() => handleSelectChat('')}>
+          <View style={styles.modalContainer}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <View style={styles.profileInformation}>
+                  <Image
+                    style={styles.profileImage}
+                    source={renderProfileImage(to.profileImage)}
                   />
-                ))}
-              </ScrollView>
-
-              <View style={styles.messageControlContainer}>
-                <View style={styles.messageControlContent}>
+                  <View style={styles.profileDetail}>
+                    <Text style={styles.displayName}>{to.name}</Text>
+                  </View>
                   <TouchableOpacity
-                    onPress={() => setIsLocationModalVisible(true)}
-                    style={styles.locationButton}>
+                    onPress={() => {
+                      setIsChatModalVisible(false);
+                      setIsBlockReportModalVisible(true);
+                    }}>
                     <Image
-                      source={require('../../../assets/map.png')}
-                      style={{width: 30, height: 30}}
+                      source={require('../../../assets/block.png')}
+                      style={styles.blockIcon}
                     />
                   </TouchableOpacity>
-                  <TextInput
-                    value={textMessage}
-                    onChangeText={setTextMessage}
-                    style={styles.textMessageInputBox}
-                    placeholder="Your Message"
-                    placeholderTextColor={'gray'}
-                    multiline={true}
-                    ref={textInputRef}
-                  />
-                  <CustomButton
-                    style={styles.sendBtn}
-                    onPress={handleSendMessage}>
-                    <Image source={require('../../../assets/sendbtn.png')} />
-                  </CustomButton>
                 </View>
-              </View>
 
-              <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isLocationModalVisible}
-                onRequestClose={() => setIsLocationModalVisible(false)}>
-                <TouchableWithoutFeedback
-                  onPress={() => setIsLocationModalVisible(false)}>
-                  <View style={styles.locationModalBackground}>
-                    <View style={styles.locationModalContent}>
-                      <FlatList
-                        data={location}
-                        keyExtractor={item => item.id.toString()}
-                        renderItem={({item}) => (
-                          <TouchableOpacity
-                            style={styles.locationItem}
-                            onPress={() => handleSelectLocation(item)}>
-                            <Text style={styles.locationName}>{item.name}</Text>
-                            <Text style={styles.locationDescription}>
-                              {item.description}
-                            </Text>
-                          </TouchableOpacity>
-                        )}
+                <ScrollView
+                  style={styles.chatBubbleList}
+                  ref={scrollViewRef}
+                  onScrollBeginDrag={() => handleScroll(true)}
+                  onScrollEndDrag={() => handleScroll(false)}>
+                  {[...messages.values()].map(message => (
+                    <ChatBubble
+                      key={message.id}
+                      message={message}
+                      to={chatDoc.to}
+                    />
+                  ))}
+                </ScrollView>
+
+                <View style={styles.messageControlContainer}>
+                  <View style={styles.messageControlContent}>
+                    <TouchableOpacity
+                      onPress={() => setIsLocationModalVisible(true)}
+                      style={styles.locationButton}>
+                      <Image
+                        source={require('../../../assets/map.png')}
+                        style={{width: 30, height: 30}}
                       />
-                    </View>
+                    </TouchableOpacity>
+                    <TextInput
+                      value={textMessage}
+                      onChangeText={setTextMessage}
+                      style={styles.textMessageInputBox}
+                      placeholder="Your Message"
+                      placeholderTextColor={'gray'}
+                      multiline={true}
+                      ref={textInputRef}
+                    />
+                    <CustomButton
+                      style={styles.sendBtn}
+                      onPress={handleSendMessage}>
+                      <Image source={require('../../../assets/sendbtn.png')} />
+                    </CustomButton>
                   </View>
-                </TouchableWithoutFeedback>
-              </Modal>
+                </View>
+
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={isLocationModalVisible}
+                  onRequestClose={() => setIsLocationModalVisible(false)}>
+                  <TouchableWithoutFeedback
+                    onPress={() => setIsLocationModalVisible(false)}>
+                    <View style={styles.locationModalBackground}>
+                      <View style={styles.locationModalContent}>
+                        <FlatList
+                          data={location}
+                          keyExtractor={item => item.id.toString()}
+                          renderItem={({item}) => (
+                            <TouchableOpacity
+                              style={styles.locationItem}
+                              onPress={() => handleSelectLocation(item)}>
+                              <Text style={styles.locationName}>
+                                {item.name}
+                              </Text>
+                              <Text style={styles.locationDescription}>
+                                {item.description}
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      </View>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </Modal>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      {/* Block Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isBlockReportModalVisible}
+        onRequestClose={() => setIsBlockReportModalVisible(false)}>
+        <TouchableWithoutFeedback
+          onPress={() => setIsBlockReportModalVisible(false)}>
+          <View style={styles.modalContainerBlock}>
+            <View style={styles.modalContentBlock}>
+              <Text style={styles.modalTitle}>Block and Report Match</Text>
+              <Text style={styles.modalText}>
+                Once you block and report you won’t meet the same person again
+              </Text>
+              <View style={styles.modalButtonContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsBlockReportModalVisible(false);
+                    setIsChatModalVisible(true);
+                  }}>
+                  <Text style={styles.cancelButton}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsBlockReportModalVisible(false); 
+                    setIsReasonModalVisible(true); 
+                  }}>
+                  <Text style={styles.blockButton}>Block and Report</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isReasonModalVisible}
+        onRequestClose={() => setIsReasonModalVisible(false)}>
+        <TouchableWithoutFeedback
+          onPress={() => setIsReasonModalVisible(false)}>
+          <View style={styles.modalContainerBlock}>
+            <View style={styles.modalContentBlock}>
+              <Text style={styles.modalTitle}>Block Reason</Text>
+              <TextInput
+                style={styles.inputBox}
+                placeholder="Enter your reason for blocking"
+                placeholderTextColor="gray"
+                multiline
+                value={blockReason}
+                onChangeText={setBlockReason}
+              />
+              <View style={styles.modalButtonContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsReasonModalVisible(false);
+                    setIsChatModalVisible(true);
+                    setBlockReason(''); 
+                  }}>
+                  <Text style={styles.cancelButton}>Cancel Block</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (otherUserDoc?.email)
+                      userService.block(
+                        otherUserDoc?.email,
+                        blockReason,
+                        chatDoc.chatId,
+                      );
+                    setIsReasonModalVisible(false); 
+                    setBlockReason(''); 
+                  }}>
+                  <Text style={styles.blockButton}>Confirm Block</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    </>
   );
 }
+
 
 function getStyles(theme: CustomTheme) {
   return StyleSheet.create({
@@ -459,6 +560,70 @@ function getStyles(theme: CustomTheme) {
     locationButton: {
       padding: 1,
       tintColor: theme.primary,
+    },
+    blockIcon: {
+      width: 32,
+      height: 32,
+      margin: 10,
+      tintColor: '#FF4C4C',
+    },
+    modalContainerBlock: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    },
+    modalContentBlock: {
+      width: 300,
+      padding: 20,
+      backgroundColor: 'white',
+      borderRadius: 10,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {width: 0, height: 2},
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5, 
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#333',
+      marginBottom: 10,
+      textAlign: 'center',
+    },
+    modalText: {
+      fontSize: 14,
+      color: '#666',
+      textAlign: 'center',
+      marginBottom: 20,
+    },
+    modalButtonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    cancelButton: {
+      color: '#007bff', 
+      fontSize: 16,
+      fontWeight: 'bold',
+      padding: 10,
+    },
+    blockButton: {
+      color: '#ff0000',
+      fontSize: 16,
+      fontWeight: 'bold',
+      padding: 10,
+    },
+    inputBox: {
+      height: 80,
+      width: '100%',
+      borderColor: '#ccc',
+      borderWidth: 1,
+      borderRadius: 5,
+      padding: 10,
+      textAlignVertical: 'top', 
+      marginBottom: 20,
     },
   });
 }
