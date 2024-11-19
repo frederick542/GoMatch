@@ -112,7 +112,7 @@ export default function VideoCall({route}: any) {
   async function makeConnection() {
     // ws = new WebSocket(process.env.WEBSOCKET_URL!);
 
-    ws = new WebSocket('ws://192.168.147.21:4001');
+    ws = new WebSocket('wss://gomatch-backend-production.up.railway.app');
     ws.onopen = () => handleOnOpenWebSocket(ws!);
     ws.onmessage = event => handleOnMessageWebSocket(event);
     ws.onclose = () => handleOnCloseWebSocket();

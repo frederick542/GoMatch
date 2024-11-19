@@ -622,6 +622,7 @@ function getStyles(theme: CustomTheme) {
       borderWidth: 1,
       borderRadius: 5,
       padding: 10,
+      color:  "black",
       textAlignVertical: 'top', 
       marginBottom: 20,
     },

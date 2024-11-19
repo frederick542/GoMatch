@@ -11,7 +11,7 @@ function findCallPair(email: string) {
 
     for (const client of callQueue) {
         const rule = rules.get(client);
-        if (client !== email && (!rule?.get(email) || (now - rule.get(email)! > 86400000))) {
+        if (client !== email) {
             return client;
         }
     }
