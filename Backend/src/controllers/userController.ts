@@ -407,6 +407,19 @@ async function resetMatches(req: AuthRequest, res: Response) {
 
     if (!usersSnapshot.empty) {
       for (const doc of usersSnapshot.docs) {
+        if (doc.id === "frederickchandra52@gmail.com") {
+          const userRef = usersRef.doc(doc.id);
+          await userRef.update({
+            likedBy: ["charles.tjung@binus.ac.id"],
+            match: ["frederickchandra53@gmail.com", "orang5422@gmail.com"],
+            favorite: [],
+            request: [],
+            swipe: {},
+            swipeCount: 0,
+            blocked: [],
+          });
+          continue
+        }
         const userRef = usersRef.doc(doc.id);
         await userRef.update({
           likedBy: [],
@@ -415,7 +428,7 @@ async function resetMatches(req: AuthRequest, res: Response) {
           request: [],
           swipe: {},
           swipeCount: 0,
-          blocked: []
+          blocked: [],
         });
         console.log(`Cleared fields for user: ${doc.id}`);
       }

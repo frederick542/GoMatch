@@ -112,7 +112,7 @@ export default function VideoCall({route}: any) {
   async function makeConnection() {
     // ws = new WebSocket(process.env.WEBSOCKET_URL!);
 
-    ws = new WebSocket('ws://192.168.68.104:4001');
+    ws = new WebSocket('ws://192.168.147.21:4001');
     ws.onopen = () => handleOnOpenWebSocket(ws!);
     ws.onmessage = event => handleOnMessageWebSocket(event);
     ws.onclose = () => handleOnCloseWebSocket();
@@ -157,9 +157,9 @@ export default function VideoCall({route}: any) {
       ) : (
         <View style={styles.callContainer}>
           <ZegoUIKitPrebuiltCall
-            appID={1421399412}
+            appID={616116589}
             appSign={
-              '7ef34f976adc6b0c4a93db1acd2f3bdfcfc67acf0a00a14faf56a05be2114c34'
+              'f680eb761356976e0f87a63ac27f68d31bea19c0308887b16669b01cba0c8c5f'
             }
             userID={user!.email}
             userName={user!.name}

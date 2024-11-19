@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import http from 'http';
-
+import serverless from 'serverless-http'
 import AuthRouter from './routes/auth';
 import UserRouter from './routes/user';
 import MessageRouter from './routes/message';
@@ -13,6 +13,7 @@ const app = express();
 const port = 4001;
 const server = http.createServer(app);
 
+require("dotenv").config();
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
@@ -37,3 +38,5 @@ app.get('/', (req, res) => {
 server.listen(port, '0.0.0.0', () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
+
+module.exports.handler = serverless(app);

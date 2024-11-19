@@ -1,6 +1,11 @@
 import * as admin from 'firebase-admin'
 
-var serviceAccount = require("./serviceAccount.json");
+require("dotenv").config();
+if (!process.env.FIREBASE_CREDENTIALS) {
+  throw new Error("FIREBASE_CREDENTIALS environment variable is not set");
+}
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
